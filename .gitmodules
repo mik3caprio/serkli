@@ -1,0 +1,3 @@
+[submodule "lib/Django-Eventbrite"]
+	path = lib/Django-Eventbrite
+	url = https://github.com/xxv/django-eventbrite.git
