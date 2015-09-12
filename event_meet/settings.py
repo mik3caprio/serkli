@@ -22,7 +22,21 @@ SECRET_KEY = 'x2k@kwp++xpord1+@^)xx4!!ajqfyp&(-ns%5*uen!frtv5)zh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
@@ -41,6 +55,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_eventbrite',
+    'raffle',
 )
 
 MIDDLEWARE_CLASSES = (
