@@ -20,14 +20,6 @@ EVENTBRITE_EVENT_ID ='17475222862'
 EVENTBRITE_OAUTH_TOKEN='OZWZO4LQPRZMGXMAJLB3'
 
 
-# configuration
-DATABASE = '/tmp/spacevr_raffle.db'
-DEBUG = True
-SECRET_KEY = 'development key'
-USERNAME = 'admin'
-PASSWORD = 'default'
-
-
 # Instantiate the Eventbrite API client.
 eventbrite = eventbrite.Eventbrite(EVENTBRITE_OAUTH_TOKEN)
 
