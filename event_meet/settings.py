@@ -79,18 +79,8 @@ WSGI_APPLICATION = 'event_meet.wsgi.application'
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'event_meet_db',
-        'USER': 'event_meet_user',
-        'PASSWORD': 'emdev23',
-        'HOST': '',
-        'PORT': '',
-    }
-}
+DATABASES = {'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))}
 
-#DATABASES['default'] =  dj_database_url.config()
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
