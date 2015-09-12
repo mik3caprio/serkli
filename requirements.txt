@@ -1,7 +1,6 @@
 dj-database-url==0.3.0
 dj-static==0.0.6
 Django==1.8.4
-Django-Eventbrite==0.1.0
 django-money==0.7.2
 django-phonenumber-field==0.7.2
 django-toolbelt==0.0.1
