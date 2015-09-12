@@ -82,6 +82,17 @@ import dj_database_url
 DATABASES = {'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))}
 
 
+EMAIL_HOST = os.environ.get('EMAIL_HOST_VAR')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER_VAR')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD_VAR')
+EMAIL_PORT = os.environ.get('EMAIL_PORT_VAR')
+EMAIL_USE_TLS = True
+
+
+#from django.core.mail import send_mail
+#send_mail('Subject here', 'Here is the message.', 'from@example.com', ['to@example.com'], fail_silently=False)
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 

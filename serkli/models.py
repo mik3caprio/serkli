@@ -100,32 +100,30 @@ class Member(models.Model):
 
         male = 0.001
 
-        Overall, white women are slightly more likely to develop breast cancer than are African-American women,
-        but African-American women are more likely to die of this cancer.
-        However, in women under 45 years of age, breast cancer is more common in African- American women. 
-        Asian, Hispanic, and Native-American women have a lower risk of developing and dying from breast cancer. 
+#        Overall, white women are slightly more likely to develop breast cancer than are African-American women,
+#        but African-American women are more likely to die of this cancer.
+#        However, in women under 45 years of age, breast cancer is more common in African- American women. 
+#        Asian, Hispanic, and Native-American women have a lower risk of developing and dying from breast cancer. 
 
-        Having one immediate relative approximately doubles a womans risk
+#        Having one immediate relative approximately doubles a womans risk
 
-        Having 2 first-degree relatives increases her risk about 3-fold
+#        Having 2 first-degree relatives increases her risk about 3-fold
 
-        Women who have 2 to 5 drinks daily have about 1.5 times the risk of women who don’t drink alcohol
+#        Women who have 2 to 5 drinks daily have about 1.5 times the risk of women who don't drink alcohol
 
-        Altogether, less than 15% of women with breast cancer have a family member with this disease
-        This means that most (over 85%) women who get breast cancer do not have a family history of this disease
+#        Altogether, less than 15% of women with breast cancer have a family member with this disease
+#        This means that most (over 85%) women who get breast cancer do not have a family history of this disease
 
-        5% to 10% of breast cancer cases are thought to be hereditary
+#        5% to 10% of breast cancer cases are thought to be hereditary
 
-        2 of 3 invasive breast cancers are found in women age 55 or older
+#        2 of 3 invasive breast cancers are found in women age 55 or older
 
-        Brisk walking reduced a woman's risk by 18%
-
-
-        if self.smoker:
+#        Brisk walking reduced a woman's risk by 18%
 
 
+#        if self.smoker:
 
-        return self.year_in_school in (self.JUNIOR, self.SENIOR)
+        return #self.year_in_school in (self.JUNIOR, self.SENIOR)
 
 
     def __unicode__(self):
