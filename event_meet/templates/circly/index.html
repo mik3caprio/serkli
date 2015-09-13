@@ -1,0 +1,73 @@
+{% extends "circly/base.html" %}
+
+{% block title %}Welcome to Circly | Circly{% endblock %}
+
+{% block contentbegin %}<div id="home">{% endblock %}
+
+{% block contentdivfinish %}
+<section class="intro">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <h1>1 in 8 women will develop breast cancer‎.</h1>
+        <h2>Circly will help you, your friends, and family lower your risk of breast cancer. Tell us a little about yourself so we can understand what your risks are.</h2>
+        <!-- <button type="button" class="btn btn-default btn-lg ghost">Get Started</button> -->
+        <a href="#signup" class="btn btn-default btn-lg ghost">Get Started</a>
+      </div><!--/col-->
+    </div><!--/row-->
+  </div><!--/container-->
+</section>
+
+<section class="features">
+  <div class="container">
+    <div class="row">
+      <ul>
+        <li class="col-md-4">
+          <img src="http://placehold.it/200x200"/>
+          <h3>Preventive Care</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+        </li>
+        <li class="col-md-4">
+          <img src="http://placehold.it/200x200"/>
+          <h3>Use A Network</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+        </li>
+        <li class="col-md-4">
+          <img src="http://placehold.it/200x200"/>
+          <h3>Safe &amp; Secure</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+        </li>
+      </ul>
+    </div><!--/row-->
+  </div><!--/container-->
+</section>
+
+<section class="network">
+  <div class="container">
+    <h3>You are not alone.</h3>
+  </div><!--/container-->
+</section>
+
+<a name="signup"></a>
+<section class="getstarted">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="title">
+          <h3>Get Started</h3>
+          <hr/>
+        </div><!--/title-->
+      </div><!--/col-->
+    </div><!--/row-->
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <form>
+          <p>My <label for="fieldName">name</label> is <input id="fieldName" name="cm-name" type="text" /> and I want to create a circle of support to prevent breast cancer.</p>
+          <!-- <button type="button" class="btn btn-primary btn-lg">Sign Up</button> -->
+          <a href="/flow.php" class="btn btn-primary btn-lg">Sign Up</a>
+        </form>
+      </div><!--/col-->
+    </div><!--/row-->
+  </div><!--/container-->
+</section>
+{% endblock %}

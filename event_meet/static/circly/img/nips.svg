@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="799px" height="256px" viewBox="0 0 799 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12072) - http://www.bohemiancoding.com/sketch -->
+    <title>Nipple + hair</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Site" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Campaign" sketch:type="MSArtboardGroup" transform="translate(-100.000000, -315.000000)">
+            <g id="Nipple-+-hair" sketch:type="MSLayerGroup" transform="translate(100.000000, 316.000000)">
+                <g id="Nipple" transform="translate(75.000000, 74.000000)" fill="#EEB599" sketch:type="MSShapeGroup">
+                    <circle id="Oval-41" cx="50" cy="50" r="50"></circle>
+                    <circle id="Oval-41-Copy" cx="600" cy="50" r="50"></circle>
+                </g>
+                <g id="hair" stroke="#707070" stroke-width="2" sketch:type="MSShapeGroup">
+                    <path d="M727,63.9999993 C737,50.9999993 791,28 757,23 C723,18 765,51 765,51" id="Path-42"></path>
+                    <path d="M175,194.757885 C185,181.757885 239,158.757886 205,153.757886 C171,148.757886 213,181.757886 213,181.757886" id="Path-42-Copy"></path>
+                    <path d="M75,42.4842293 C85,29.4842293 139,6.48423004 105,1.48423004 C71,-3.51576996 113,29.48423 113,29.48423" id="Path-42-Copy-2"></path>
+                    <path d="M9,220.959421 C19,207.959421 73,184.959421 39,179.959421 C5,174.959421 47,207.959421 47,207.959421" id="Path-42-Copy-3" transform="translate(29.551872, 200.201536) rotate(-58.000000) translate(-29.551872, -200.201536) "></path>
+                    <path d="M551.448128,217.689363 C561.448128,204.689363 615.448128,181.689364 581.448128,176.689364 C547.448128,171.689364 589.448128,204.689364 589.448128,204.689364" id="Path-42-Copy-4" transform="translate(572.000000, 196.931478) rotate(-58.000000) translate(-572.000000, -196.931478) "></path>
+                    <path d="M764,114 L798,71" id="Path-46"></path>
+                    <path d="M605,110 L572,104" id="Path-47"></path>
+                    <path d="M199,87 L209,66" id="Path-48"></path>
+                    <path d="M118,205 C118,205 155,207 150,231 C145,255 140,258 129,249" id="Path-49"></path>
+                    <path d="M638,205 C638,205 675,207 670,231 C665,255 660,258 649,249" id="Path-49-Copy"></path>
+                    <path d="M628,5 C628,5 665,7 660,31 C655,55 650,58 639,49" id="Path-49-Copy-2" transform="translate(644.232335, 29.333333) rotate(-45.000000) translate(-644.232335, -29.333333) "></path>
+                    <path d="M713,195 C713,195 763,206 763,195 C763,184 762,173 750,184 C738,195 726,199.999998 738,210 C750,220.000002 771,211 771,203" id="Path-52"></path>
+                    <path d="M0.55187226,94.5806943 C0.55187226,94.5806943 50.5518723,105.580694 50.5518723,94.5806943 C50.5518723,83.5806943 49.5518723,72.5806943 37.5518723,83.5806943 C25.5518723,94.5806943 13.5518723,99.5806928 25.5518723,109.580694 C37.5518723,119.580696 58.5518723,110.580695 58.5518723,102.580694" id="Path-52-Copy"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

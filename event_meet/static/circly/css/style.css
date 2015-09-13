@@ -1,0 +1,308 @@
+/* ========================================================= Main ===*/
+html, body{
+    background-color: #fff;
+    background-color: #252429;
+    color: #323337;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 1.45;
+    font-family: 'Work Sans', sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+/* ========================================================= Typography ===*/
+/* Type Scale: 5 7 9 12 16 21 28 37 50 83 111 */
+a{
+	color: #0070E0;
+	text-decoration: none;
+	-webkit-transition: color .25s ease-in, background .25s ease-in, opacity .25s ease-in;
+	-moz-transition: color .25s ease-in, background .25s ease-in, opacity .25s ease-in;
+	-ms-transition: color .25s ease-in, background .25s ease-in, opacity .25s ease-in;
+	-o-transition: color .25s ease-in, background .25s ease-in, opacity .25s ease-in;
+	transition: color .25s ease-in, background .25s ease-in, opacity .25s ease-in;
+}
+a:hover{
+  color: #0057AD;
+  text-decoration: none;
+}
+/* ========================================================= Header ===*/
+header{
+  background-color: #2196F3;
+}
+header h1{
+  color: #fff;
+  display: inline-block;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin: 20px 0;
+  text-transform: uppercase;
+}
+header h1 a, header h1 a:hover{
+  color: #fff;
+}
+/* ------
+-- Nav --
+------ */
+nav{
+  float: right;
+  margin: 25px 0 0;
+}
+nav ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+nav li{
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+nav a{
+  color: rgba(255,255,255,0.7);
+  font-weight: 500;
+  padding: 0 10px;
+}
+/* ========================================================= Main ===*/
+section{
+  background-color: #fff;
+  padding: 120px 0 100px;
+}
+.title{
+  margin: 0 0 80px;
+  text-align: center;
+}
+.title h3{
+  font-size: 16px;
+  letter-spacing: 3px;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+.title hr{
+  border-top: 1px solid #B1B1B1;
+  margin: 0 auto 10px;
+  width: 50px;
+}
+.title p{
+  color: #7A7A7A;
+  font-family: 'Libre Baskerville', sans-serif;
+  font-size: 16px;
+  margin: 0;
+}
+/* ========================================================= Home ===*/
+#home header{
+
+}
+/* --------
+-- Intro --
+-------- */
+#home .intro{
+  background-color: #2196F3;
+  color: #fff;
+  text-align: center;
+}
+#home .intro h1{
+  font-weight: 700;
+  margin: 20px 0 30px;
+}
+#home .intro h2{
+  color: rgba(255,255,255.06);
+  font-size: 28px;
+  font-weight: 300;
+  margin: 0 0 80px;
+}
+#home .intro .btn{
+  margin: 0 0 20px;
+}
+/* ----------
+-- Network --
+---------- */
+.network{
+  background-color: #0F1628;
+  background-image: url('../img/network.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  height: 600px;
+  padding: 0;
+  width: 100%;
+}
+.network img{
+  display: block;
+  margin: 0 auto;
+}
+.network h3{
+  color: rgba(255,255,255,0.8);
+  font-family: 'Libre Baskerville', sans-serif;
+  font-size: 37px;
+  font-weight: 700;
+  margin: 70px 0 0 30px;
+}
+/* -----------
+-- Features --
+----------- */
+.features{
+
+}
+.features ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.features li{
+
+}
+.features img{
+  max-width: 100px;
+}
+.features h3{
+  font-size: 16px;
+  text-transform: uppercase;
+}
+.features p{
+
+}
+/* --------------
+-- Get Started --
+-------------- */
+.getstarted{
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+.getstarted .btn{
+
+}
+.getstarted input{
+  text-align: center;
+}
+/* ========================================================= Form ===*/
+form{
+  text-align: center;
+}
+form p{
+  font-family: 'Libre Baskerville', sans-serif;
+  font-size: 37px;
+  font-weight: 400;
+  margin: 0 0 80px;
+  text-align: center;
+}
+form input[type=text], form input[type=email]{
+    background-color: #feffe3;
+    background: none;
+    border:none;
+    border-bottom: 1px dotted #94949c;
+    border-radius: 3px 3px 0 0;
+    max-width: 260px;
+    width: 100%;
+}
+/* ========================================================= #checkmeout ===*/
+#checkmeout{
+
+}
+#checkmeout header{
+  background-color: #F1D8C4;
+}
+#checkmeout header h1 a{
+  color: #323337;
+}
+#checkmeout header nav a{
+  color: rgba(0,0,0,0.5);
+}
+#checkmeout .intro{
+  background-color: #F1D8C4;
+}
+#checkmeout .intro h1{
+  color: rgba(0,0,0,0.7);
+  font-size: 55px;
+  font-weight: 700;
+  margin: 0 0 140px;
+  text-align: center;
+}
+#checkmeout .intro img{
+  display: block;
+  margin: 0 auto 60px;
+}
+#checkmeout .nips{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#checkmeout .nips li{
+  float: left;
+  width: 20%;
+}
+#checkmeout .nips img{
+  width: 100%;
+}
+#checkmeout .nippics{
+  padding-bottom: 0;
+}
+#checkmeout .steps{
+  list-style: none;
+  margin: 200px 0 0 80px;
+  padding: 0;
+}
+#checkmeout .steps li{
+  margin: 0 0 60px;
+  padding: 0;
+  text-indent: -68px;
+}
+#checkmeout .steps span{
+  font-size: 21px;
+  margin: 0 0 0 20px;
+  vertical-align: middle;
+}
+/* ========================================================= Footer ===*/
+footer{
+  background-color: #252429;
+  color: rgba(255,255,255,0.5);
+  padding: 20px 0;
+}
+footer p{
+  color: rgba(255,255,255,0.3);
+  font-size: 12px;
+  margin: 0;
+}
+footer a{
+  color: rgba(255,255,255,0.5);
+}
+/* ========================================================= Utility ===*/
+img{
+  height: auto;
+  max-width: 100%;
+}
+.separator{
+  background-color: #fff;
+}
+.separator hr{
+  margin: 0;
+  padding: 0;
+}
+.btn{
+  border-radius: 3px;
+  padding: 10px 30px;
+  text-transform: uppercase;
+  font-weight: 700;
+  -webkit-transition: color .25s ease-in, background .25s ease-in, opacity .25s ease-in;
+	-moz-transition: color .25s ease-in, background .25s ease-in, opacity .25s ease-in;
+	-ms-transition: color .25s ease-in, background .25s ease-in, opacity .25s ease-in;
+	-o-transition: color .25s ease-in, background .25s ease-in, opacity .25s ease-in;
+	transition: color .25s ease-in, background .25s ease-in, opacity .25s ease-in;
+}
+.ghost{
+  border: 2px solid rgba(255,255,255,0.8);
+  background: none;
+  color: rgba(255,255,255,0.8);
+}
+.ghost:hover{
+  border: 2px solid #fff;
+  background-color: rgba(255,255,255,0.1);
+  color: #fff;
+}
+.btn-primary{
+  background-color: #2196F3;
+  border: none;
+}
