@@ -29,3 +29,10 @@ def sms(request):
     r.message(msg)
 
     return r
+
+@twilio_view
+def ring(request):
+    r = Response()
+    r.play('http://bit.ly/phaltsw')
+
+    return r
