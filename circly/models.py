@@ -1,4 +1,6 @@
+import uuid
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class Event(models.Model):
@@ -23,6 +25,7 @@ class Attendee(models.Model):
 class Circle(models.Model):
     circle_name = models.CharField(max_length=100)
     circle_created_date = models.DateTimeField('date of event')
+
 
     def __unicode__(self):
         return self.circle_name
@@ -114,6 +117,38 @@ class Member(models.Model):
 
     def __unicode__(self):
         return self.member_name
+
+
+class Reminder(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    member = models.ForeignKey(Member)
+    reminder_subject = models.CharField(max_length=65)
+    reminder_message = models.CharField(max_length=150)
+    reminder_created_date = models.DateTimeField('date of event')
+    reminder_send_date = models.DateTimeField('date of event', null=True, blank=True)
+    reminder_sent = models.BooleanField(default=False)
+
+    def was_sent():
+        self.reminder_sent = True
+        self.save()
+
+        return
+
+    def is_an_email():
+        if (self.member.member_email):
+            return True
+
+        return False
+
+    def is_an_SMS():
+        if (self.member.member_phone):
+            return True
+
+        return False
+
+    def __unicode__(self):
+        return unicode(self.id)
+
 
 
 #class MemberHistory(models.Model):
