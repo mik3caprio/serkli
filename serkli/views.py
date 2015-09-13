@@ -1,6 +1,9 @@
 from django.shortcuts import render
 
 from django.http import HttpResponse
+from django_twilio.decorators import twilio_view
+
+from twilio.twiml import Response
 
 
 def index(request):
@@ -16,3 +19,13 @@ def results(request, question_id):
 
 def vote(request, question_id):
     return HttpResponse("You're voting on question %s." % question_id)
+
+@twilio_view
+def sms(request):
+    name = request.POST.get('Body', '')
+
+    msg = 'Hey %s, how are you today?' % (name)
+    r = Response()
+    r.message(msg)
+
+    return r
