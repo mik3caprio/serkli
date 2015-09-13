@@ -1,4 +1,7 @@
 import os
+import sys
+import logging
+
 import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from django.core.mail import send_mail
@@ -6,11 +9,13 @@ from django.core.mail import send_mail
 from django.utils import timezone
 
 
+logging.basicConfig()
+
 sched = BlockingScheduler()
 
-@sched.scheduled_job('interval', seconds=5)
-def timed_job():
-    from .models import Member, Reminder
+@sched.scheduled_job('cron', second=5)
+def scheduled_job():
+    from circly.models import Member, Reminder
 
     from twilio.rest import TwilioRestClient
  
