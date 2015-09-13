@@ -1,32 +1,41 @@
+import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from django.core.mail import send_mail
 
+from django_twilio.decorators import twilio_view
+from twilio.twiml import Response
+
+from django.utils import timezone
+
+
 sched = BlockingScheduler()
 
-@sched.scheduled_job('interval', seconds=20)
+@sched.scheduled_job('interval', seconds=5)
 def timed_job():
-    SMS_to_send = []
-    email_to_send = []
+    from .models import Member, Reminder
+
+    from twilio.rest import TwilioRestClient
+ 
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    tw_client = TwilioRestClient(account_sid, auth_token)
 
     # Select all Reminders that are unsent
-    reminders = xx
+    reminders = Reminder.objects.filter(reminder_send_date__lte=timezone.now())
 
     for each_reminder in reminders:
-        if each_reminder.is_an_email():
+        if each_reminder.member.member_email:
+            # Send emails
+            send_mail(each_reminder.reminder_subject, each_reminder.reminder_message, 'heal@circly.org', [each_reminder.member.member_email], fail_silently=False)
+        elif each_reminder.member.member_phone:
+            # Send SMS messages
+            message = tw_client.messages.create(to=each_reminder.member.member_phone,
+                                                from_="+14803767375",
+                                                body=each_reminder.reminder_message)
 
-
-
-    # Send SMS messages
-
-
-    # Send emails
-    send_mail('Reminder! Tell Kennedy to self-examine his breast', 'Hey Madelena, please send Kennedy a reminder to do a breast self-exam! Go to the page at http://j.mp/SelfChec to get some ideas for what to talk about.', 'from@example.com', ['madelena.mak@gmail.com'], fail_silently=False)
-
-
-    # Mark reminder as sent
-    
-
-    print('This job is run every 20 seconds.')
+        # Mark reminder as sent
+        each_reminder.reminder_sent = True
+        each_reminder.save()
 
 #@sched.scheduled_job('cron', day_of_week='mon-fri', hour=17)
 #def scheduled_job():
