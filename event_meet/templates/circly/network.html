@@ -1,0 +1,17 @@
+{% extends "circly/base.html" %}
+{% load static from staticfiles %}
+{% block title %}Dashboard | Circly{% endblock %}
+
+{% block contentdivstart %}<div id="network">{% endblock %}
+
+{% block contentdivfinish %}
+<section class="getstarted">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="{% url 'connect:dashboard' %}" class="btn btn-primary btn-lg">Next</a>
+      </div><!--/col-->
+    </div><!--/row-->
+  </div><!--/container-->
+</section>
+{% endblock %}

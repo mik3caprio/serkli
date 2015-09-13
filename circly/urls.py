@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^ring/$', views.ring, name='ring'),
     url(r'^email/$', views.email, name='email'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
+    url(r'^network/$', views.network, name='network'),
 ]
