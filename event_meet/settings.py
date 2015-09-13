@@ -106,8 +106,9 @@ USE_TZ = True
 
 # Static asset configuration
 # Static files (CSS, JavaScript, Images)
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+#STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = '/static/'
+STATIC_ROOT = '/event_meet/event_meet/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
