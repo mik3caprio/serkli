@@ -182,17 +182,17 @@ section{
   text-align: center;
 }
 /* ========================================================= Form ===*/
-form{
+.madlib{
   text-align: center;
 }
-form p{
+.madlib p{
   font-family: 'Libre Baskerville', sans-serif;
   font-size: 37px;
   font-weight: 400;
   margin: 0 0 80px;
   text-align: center;
 }
-form input[type=text], form input[type=email]{
+.madlib input[type=text], .madlib input[type=email]{
     background-color: #feffe3;
     background: none;
     border:none;
@@ -202,7 +202,7 @@ form input[type=text], form input[type=email]{
     max-width: 260px;
     width: 100%;
 }
-form select{
+.madlib select{
   background-color: #feffe3;
   background: none;
   border:none;
