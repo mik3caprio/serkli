@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('serkli', '0001_initial'),
+        ('circly', '0001_initial'),
     ]
 
     operations = [
@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('drinker', models.BooleanField(default=False)),
                 ('exercises', models.BooleanField(default=False)),
                 ('cancer_family', models.SmallIntegerField(default=0)),
-                ('circle', models.ForeignKey(to='serkli.Circle')),
+                ('circle', models.ForeignKey(to='circly.Circle')),
             ],
         ),
     ]

@@ -7,7 +7,6 @@ import sqlite3
 from contextlib import closing
 from collections import deque
 
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 import eventbrite
 
 from url_request import dorequest
@@ -24,32 +23,6 @@ EVENTBRITE_OAUTH_TOKEN='OZWZO4LQPRZMGXMAJLB3'
 eventbrite = eventbrite.Eventbrite(EVENTBRITE_OAUTH_TOKEN)
 
 
-app = Flask(__name__)
-app.debug = True
-
-
-def connect_db():
-    return sqlite3.connect(DATABASE)
-
-
-def init_db():
-    with closing(connect_db()) as db:
-        with app.open_resource('schema.sql', mode='r') as f:
-            db.cursor().executescript(f.read())
-        db.commit()
-
-
-@app.before_request
-def before_request():
-    g.db = connect_db()
-
-
-@app.teardown_request
-def teardown_request(exception):
-    db = getattr(g, 'db', None)
-
-    if db is not None:
-        db.close()
 
 
 @app.route('/')

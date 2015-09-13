@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('serkli', '0004_auto_20150912_1529'),
+        ('circly', '0004_auto_20150912_1529'),
     ]
 
     operations = [

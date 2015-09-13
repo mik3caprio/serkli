@@ -32,6 +32,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='attendee',
             name='event',
-            field=models.ForeignKey(to='serkli.Event'),
+            field=models.ForeignKey(to='circly.Event'),
         ),
     ]

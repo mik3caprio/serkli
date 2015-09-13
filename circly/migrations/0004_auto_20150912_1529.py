@@ -7,18 +7,18 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('serkli', '0005_auto_20150912_1533'),
+        ('circly', '0003_auto_20150912_1528'),
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name='member',
-            name='member_email',
-            field=models.CharField(max_length=200, null=True, blank=True),
+            name='member_phone',
+            field=models.CharField(default=b'', max_length=25),
         ),
         migrations.AlterField(
             model_name='member',
-            name='member_phone',
-            field=models.CharField(max_length=25, null=True, blank=True),
+            name='member_email',
+            field=models.CharField(default=b'', max_length=200),
         ),
     ]

@@ -57,7 +57,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_eventbrite',
     'django_twilio',
-    'serkli',
+    'circly',
 )
 
 MIDDLEWARE_CLASSES = (
