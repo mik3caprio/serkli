@@ -3,9 +3,6 @@ import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from django.core.mail import send_mail
 
-from django_twilio.decorators import twilio_view
-from twilio.twiml import Response
-
 from django.utils import timezone
 
 
