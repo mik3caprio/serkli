@@ -124,8 +124,8 @@ class Reminder(models.Model):
     member = models.ForeignKey(Member)
     reminder_subject = models.CharField(max_length=65)
     reminder_message = models.CharField(max_length=150)
-    reminder_created_date = models.DateTimeField('date of event')
-    reminder_send_date = models.DateTimeField('date of event', null=True, blank=True)
+    reminder_created_date = models.DateTimeField('reminder created on')
+    reminder_send_date = models.DateTimeField('send reminder on', null=True, blank=True)
     reminder_sent = models.BooleanField(default=False)
 
     def was_sent():

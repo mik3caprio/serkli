@@ -19,7 +19,7 @@ def timed_job():
     tw_client = TwilioRestClient(account_sid, auth_token)
 
     # Select all Reminders that are unsent
-    reminders = Reminder.objects.filter(reminder_send_date__lte=timezone.now())
+    reminders = Reminder.objects.filter(reminder_send_date__lte=timezone.now(), reminder_sent=False)
 
     for each_reminder in reminders:
         if each_reminder.member.member_email:
