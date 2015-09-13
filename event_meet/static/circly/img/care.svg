@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="50px" height="58px" viewBox="0 0 50 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12072) - http://www.bohemiancoding.com/sketch -->
+    <title>110 - First Aid Kit (Webby)</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Site" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Home" sketch:type="MSArtboardGroup" transform="translate(-264.000000, -618.000000)">
+            <g id="110---First-Aid-Kit-(Webby)" sketch:type="MSLayerGroup" transform="translate(265.000000, 619.000000)">
+                <g id="116---Medical-File-(Webby)" sketch:type="MSShapeGroup">
+                    <g id="Page-1">
+                        <g id="116---Medical-File-(Webby)">
+                            <path d="M0,0 L42,0 L42,56 L0,56 L0,0 L0,0 Z" id="Fill-655" fill="#FFFFFF"></path>
+                            <path d="M0,0 L42,0 L42,56 L0,56 L0,0 L0,0 Z" id="Stroke-656" stroke="#0F81E0" stroke-width="2"></path>
+                            <path d="M28,16 L24,16 L24,12 L18,12 L18,16 L14,16 L14,22 L18,22 L18,26 L24,26 L24,22 L28,22 L28,16 L28,16 Z" id="Fill-657" fill="#C6E3F8"></path>
+                            <path d="M28,16 L24,16 L24,12 L18,12 L18,16 L14,16 L14,22 L18,22 L18,26 L24,26 L24,22 L28,22 L28,16 L28,16 Z" id="Stroke-658" stroke="#0F81E0" stroke-width="2"></path>
+                            <path d="M16,36 L26,36 M12,40 L30,40 M12,44 L30,44" id="Stroke-659" stroke="#0F81E0" stroke-width="2"></path>
+                            <path d="M42,0 L48,0 L48,10 L42,10 L42,0 L42,0 Z" id="Fill-660" fill="#C6E3F8"></path>
+                            <path d="M42,0 L48,0 L48,10 L42,10 L42,0 L42,0 Z" id="Stroke-661" stroke="#0F81E0" stroke-width="2"></path>
+                            <path d="M42,10 L48,10 L48,20 L42,20 L42,10 L42,10 Z" id="Fill-662" fill="#C6E3F8"></path>
+                            <path d="M42,10 L48,10 L48,20 L42,20 L42,10 L42,10 Z" id="Stroke-663" stroke="#0F81E0" stroke-width="2"></path>
+                            <path d="M42,20 L48,20 L48,30 L42,30 L42,20 L42,20 Z" id="Fill-664" fill="#C6E3F8"></path>
+                            <path d="M42,20 L48,20 L48,30 L42,30 L42,20 L42,20 Z" id="Stroke-665" stroke="#0F81E0" stroke-width="2"></path>
+                            <path d="M42,30 L48,30 L48,40 L42,40 L42,30 L42,30 Z" id="Fill-666" fill="#C6E3F8"></path>
+                            <path d="M42,30 L48,30 L48,40 L42,40 L42,30 L42,30 Z" id="Stroke-667" stroke="#0F81E0" stroke-width="2"></path>
+                            <path d="M42,40 L48,40 L48,50 L42,50 L42,40 L42,40 Z" id="Fill-668" fill="#C6E3F8"></path>
+                            <path d="M42,40 L48,40 L48,50 L42,50 L42,40 L42,40 Z" id="Stroke-669" stroke="#0F81E0" stroke-width="2"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
