@@ -1,3 +1,4 @@
+import os
 import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from django.core.mail import send_mail
