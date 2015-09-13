@@ -18,8 +18,21 @@ def index(request):
 
     return HttpResponse(template.render(context))
 
-def detail(request, question_id):
-    return HttpResponse("You're looking at question %s." % question_id)
+def checkmeout(request):
+    template = loader.get_template('circly/checkmeout.html')
+    context = RequestContext(request, {
+#        'latest_question_list': latest_question_list,
+    })
+
+    return HttpResponse(template.render(context))
+
+def flow(request):
+    template = loader.get_template('circly/flow.html')
+    context = RequestContext(request, {
+#        'latest_question_list': latest_question_list,
+    })
+
+    return HttpResponse(template.render(context))
 
 def email(request):
     from django.core.mail import send_mail

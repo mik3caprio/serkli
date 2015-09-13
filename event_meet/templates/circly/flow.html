@@ -1,9 +1,10 @@
-<?php include 'header.php'; ?>
+{% extends "circly/base.html" %}
 
-<div id="flow">
+{% block title %}Sign Up | Circly{% endblock %}
 
-<?php include 'nav.php'; ?>
+{% block contentdivstart %}<div id="flow">{% endblock %}
 
+{% block contentdivfinish %}
 <section class="getstarted">
   <div class="container">
     <div class="row">
@@ -24,7 +25,4 @@
     </div><!--/row-->
   </div><!--/container-->
 </section>
-
-</div><!--/home-->
-
-<?php include("footer.php"); ?>
+{% endblock %}
