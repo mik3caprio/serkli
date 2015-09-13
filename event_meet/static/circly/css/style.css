@@ -205,12 +205,12 @@ form input[type=text], form input[type=email]{
 #checkmeout header{
   background-color: #F1D8C4;
 }
-#checkmeout header h1 a{
+/*#checkmeout header h1 a{
   color: #323337;
 }
 #checkmeout header nav a{
   color: rgba(0,0,0,0.5);
-}
+}*/
 #checkmeout .intro{
   background-color: #F1D8C4;
 }
