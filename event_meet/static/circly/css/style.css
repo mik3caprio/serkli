@@ -156,10 +156,12 @@ section{
 
 }
 .features img{
+  margin: 0 0 40px;
   max-width: 100px;
 }
 .features h3{
   font-size: 16px;
+  margin: 0 0 10px;
   text-transform: uppercase;
 }
 .features p{
