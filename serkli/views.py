@@ -21,9 +21,9 @@ def email(request):
 
 @twilio_view
 def sms(request):
-    name = request.POST.get('Body', '')
+#    name = request.POST.get('Body', '')
 
-    msg = 'Hey Mike, please send Kennedy a reminder to do a breast self-exam! Go to the page at http://j.mp/SelfChec to get some ideas for what to talk about.' % (name)
+    msg = 'Hey Mike, please send Kennedy a reminder to do a breast self-exam! Go to the page at http://j.mp/SelfChec to get some ideas for what to talk about.'
     r = Response()
     r.message(msg)
 
