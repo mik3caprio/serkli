@@ -18,27 +18,46 @@ def scheduled_job():
     from circly.models import Member, Reminder
 
     from twilio.rest import TwilioRestClient
- 
+#    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "event_meet.settings")
+
+    import psycopg2
+
+    try:
+        conn = psycopg2.connect("dbname='d6mes5n1fk51ca' user='dhdzbpcuvrywuw' host='ec2-54-83-58-191.compute-1.amazonaws.com' port='5432' password='dbEhHY9varxV_wKKAQAwbVrU4O'")
+    except:
+        print "I am unable to connect to the database"
+
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     tw_client = TwilioRestClient(account_sid, auth_token)
 
     # Select all Reminders that are unsent
-    reminders = Reminder.objects.filter(reminder_send_date__lte=timezone.now(), reminder_sent=False)
+    cur = conn.cursor()
+    cur.execute("""select * from circly_reminder where reminder_send_date < now() and reminder_sent = false""")
+    rows = cur.fetchall()
 
-    for each_reminder in reminders:
-        if each_reminder.member.member_email:
-            # Send emails
-            send_mail(each_reminder.reminder_subject, each_reminder.reminder_message, 'heal@circly.org', [each_reminder.member.member_email], fail_silently=False)
-        elif each_reminder.member.member_phone:
-            # Send SMS messages
-            message = tw_client.messages.create(to=each_reminder.member.member_phone,
-                                                from_="+14803767375",
-                                                body=each_reminder.reminder_message)
+#    reminders = Reminder.objects.filter(reminder_send_date__lte=timezone.now(), reminder_sent=False)
+
+#    for each_reminder in reminders:
+    for row in rows:
+        cur2 = conn.cursor()
+        cur2.execute("""select * from circly_member where member_id = %s""" % row[6])
+
+        rows2 = cur2.fetchall()
+
+        for new_row in rows2:
+            if row2[2]:
+                # Send emails
+                send_mail(row[1], row[2], 'heal@circly.org', [row2[2]], fail_silently=False)
+            elif row2[12]:
+                # Send SMS messages
+                message = tw_client.messages.create(to=row2[12],
+                                                    from_="+14803767375",
+                                                    body=row[2])
 
         # Mark reminder as sent
-        each_reminder.reminder_sent = True
-        each_reminder.save()
+        cur2.execute("""update circly_reminder set reminder_sent = true where reminder_id = %s""" % row[0])
+
 
 #@sched.scheduled_job('cron', day_of_week='mon-fri', hour=17)
 #def scheduled_job():
