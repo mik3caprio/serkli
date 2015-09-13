@@ -16,11 +16,61 @@
       </div><!--/col-->
     </div><!--/row-->
     <div class="row">
-      <div class="col-md-10 col-md-offset-1">
+      <div class="col-md-12">
         <form>
-          <p>My <label for="fName">name</label> is <input id="fName" name="cm-name" type="text" /> and I want to create a circle of support to prevent breast cancer.</p>
-          <p>I am a <input id="fChromosome" name="cm-chromosome" type="text" /> that is between <input id="fAge" name="cm-age" type="text" /> years old and my <label for="fEthnicity">ethnicity</label>  is <input id="fEthnicity" name="cm-ethnicity" type="text" />. I currently  drink, <input id="fSmoke" name="cm-smoke" type="text" /> <label for="fSmoke">smoke</label>, and <label for="fExercise">exercise</label> <input id="fExercise" name="cm-exerciser" type="text" /> with a <label for="fBmi">BMI</label> of <input id="fBmi" name="cm-bmi" type="text" />.</p>
-          <button type="button" class="btn btn-primary btn-lg">Next</button>
+          <p>I am a
+            <select id="fChromosome" name="cm-chromosome">
+              <option value="xx" selected>XX (female)</option>
+              <option value="xy">XY (male)</option>
+            </select>
+            that is
+            <select id="fAge" name="cm-age">
+              <option value="u20" selected>under 20</option>
+              <option value="20-29">between 20 and 29</option>
+              <option value="30-39">between 30 and 39</option>
+              <option value="40-44">between 40 and 44</option>
+              <option value="45-49">between 45 and 49</option>
+              <option value="50-54">between 50 and 54</option>
+              <option value="55-59">between 55 and 59</option>
+              <option value="60o">60 and over</option>
+            </select>
+            years old and my
+            <label for="fEthnicity">ethnicity</label>
+            is
+            <select id="fEthnicity" name="cm-ethnicity">
+              <option value="caucasian" selected>Caucasian Non-Hispanic</option>
+              <option value="african">African American</option>
+              <option value="hispanic">Hispanic</option>
+              <option value="asian">Asian</option>
+              <option value="other">Other race or ethnicity</option>
+            </select>
+            . I currently
+            <select id="fDrink" name="cm-drink">
+              <option value="no" selected>Don't</option>
+              <option value="yes">Do</option>
+            </select>
+            drink,
+            <select id="fSmoke" name="cm-smoke">
+              <option value="no" selected>Don't</option>
+              <option value="yes">Do</option>
+            </select>
+            <label for="fSmoke">smoke</label>
+            , and
+            <select id="fExercise" name="cm-exerciser">
+              <option value="no" selected>Don't</option>
+              <option value="yes">Do</option>
+            </select>
+            <label for="fExercise">exercise</label>
+            with a
+            <label for="fBmi">BMI</label>
+            of
+            <select id="fBmi" name="cm-bmi">
+              <option value="u25" selected>Under 25</option>
+              <option value="o25">Over 25</option>
+            </select>
+            .</p>
+          <!-- <button type="button" class="btn btn-primary btn-lg">Next</button> -->
+          <a href="{% url 'connect:dashboard' %}" class="btn btn-primary btn-lg">Next</a>
         </form>
       </div><!--/col-->
     </div><!--/row-->

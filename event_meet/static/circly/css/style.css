@@ -197,8 +197,28 @@ form input[type=text], form input[type=email]{
     border:none;
     border-bottom: 1px dotted #94949c;
     border-radius: 3px 3px 0 0;
+    color: #2196F3;
     max-width: 260px;
     width: 100%;
+}
+form select{
+  background-color: #feffe3;
+  background: none;
+  border:none;
+  border-bottom: 1px dotted #94949c;
+  border-radius: 3px 3px 0 0;
+  color: #2196F3;
+  max-width: 300px;
+  text-align: center;
+  width: 100%;
+}
+/* ========================================================= Dashboard ===*/
+#dashboard{
+
+}
+#dashboard img{
+  display: block;
+  margin: 0 auto;
 }
 /* ========================================================= #checkmeout ===*/
 #checkmeout{

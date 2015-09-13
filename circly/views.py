@@ -34,6 +34,14 @@ def flow(request):
 
     return HttpResponse(template.render(context))
 
+def dashboard(request):
+    template = loader.get_template('circly/dashboard.html')
+    context = RequestContext(request, {
+#        'latest_question_list': latest_question_list,
+    })
+
+    return HttpResponse(template.render(context))
+
 def email(request):
     from django.core.mail import send_mail
 

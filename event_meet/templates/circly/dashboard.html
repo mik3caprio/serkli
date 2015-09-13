@@ -1,15 +1,15 @@
 {% extends "circly/base.html" %}
-
+{% load static from staticfiles %}
 {% block title %}Dashboard | Circly{% endblock %}
 
-{% block contentdivstart %}<div id="flow">{% endblock %}
+{% block contentdivstart %}<div id="dashboard">{% endblock %}
 
 {% block contentdivfinish %}
 <section class="getstarted">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <img src="{% static "circly/img/circle.svg" %}" />>
+        <img src="{% static "circly/img/circle.svg" %}" />
       </div><!--/col-->
     </div><!--/row-->
   </div><!--/container-->
