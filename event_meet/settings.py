@@ -90,10 +90,6 @@ EMAIL_PORT = os.environ.get('EMAIL_PORT_VAR')
 EMAIL_USE_TLS = True
 
 
-#from django.core.mail import send_mail
-#send_mail('Subject here', 'Here is the message.', 'from@example.com', ['to@example.com'], fail_silently=False)
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
