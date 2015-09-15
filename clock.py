@@ -61,7 +61,7 @@ def scheduled_job():
                 message.set_subject(row[1])
                 message.set_html(row[2])
                 message.set_text(row[2])
-                message.set_from('Circly Support <heal@circly.org>)
+                message.set_from('Circly Support <heal@circly.org>')
                 status, msg = sg.send(message)
             elif new_row[12]:
                 # Send SMS messages
