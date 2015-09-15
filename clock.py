@@ -63,9 +63,10 @@ def scheduled_job():
                 status, msg = sg.send(message)
             elif new_row[12]:
                 # Send SMS messages
-                message = tw_client.messages.create(to=new_row[12],
-                                                    from_="+14803767375",
-                                                    body=row[2])
+#                message = tw_client.messages.create(to=new_row[12],
+#                                                    from_="+14803767375",
+#                                                    body=row[2])
+                continue
 
         # Mark reminder as sent
         cur2.execute("""update circly_reminder set reminder_sent = true where id = '%s'""" % row[0])
