@@ -69,5 +69,6 @@ def scheduled_job():
 
             # Mark reminder as sent
             member_cur.execute("""update circly_reminder set reminder_sent = true where id = '%s'""" % each_reminder[0])
+            conn.commit()
 
 sched.start()
