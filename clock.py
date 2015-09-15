@@ -68,7 +68,7 @@ def scheduled_job():
                                                     body=row[2])
 
         # Mark reminder as sent
-        cur2.execute("""update circly_reminder set reminder_sent = true where id = %s""" % row[0])
+        cur2.execute("""update circly_reminder set reminder_sent = true where id = '%s'""" % row[0])
 
 
 #@sched.scheduled_job('cron', day_of_week='mon-fri', hour=17)
