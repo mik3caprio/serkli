@@ -41,40 +41,33 @@ def scheduled_job():
     sg = sendgrid.SendGridClient(sg_user, sg_password)
 
     # Select all Reminders that are unsent
-    cur = conn.cursor()
-    cur.execute("""select * from circly_reminder where reminder_send_date < now() and reminder_sent = false""")
-    rows = cur.fetchall()
+    reminder_cur = conn.cursor()
+    reminder_cur.execute("""select * from circly_reminder where reminder_send_date < now() and reminder_sent = false""")
+    reminders = reminder_cur.fetchall()
 
-    for row in rows:
-        cur2 = conn.cursor()
-        cur2.execute("""select * from circly_member where id = %s""" % row[6])
+    for each_reminder in reminders:
+        member_cur = conn.cursor()
+        member_cur.execute("""select * from circly_member where id = %s""" % each_reminder[6])
 
-        rows2 = cur2.fetchall()
+        members = member_cur.fetchall()
 
-        for new_row in rows2:
-            if new_row[2]:
+        for each_member in members:
+            if each_member[2]:
                 # Send emails
-#                message = sendgrid.Mail()
-#                message.add_to('<' + new_row[2] + '>')
-#                message.set_subject(row[1])
-#                message.set_html(row[2])
-#                message.set_text(row[2])
-#                message.set_from('Circly Support <heal@circly.org>')
-#                status, msg = sg.send(message)
-                continue
-            elif new_row[12]:
+                message = sendgrid.Mail()
+                message.add_to('<' + each_member[2] + '>')
+                message.set_subject(each_reminder[1])
+                message.set_html(each_reminder[2])
+                message.set_text(each_reminder[2])
+                message.set_from('Circly Support <heal@circly.org>')
+                status, msg = sg.send(message)
+            elif each_member[12]:
                 # Send SMS messages
-#                message = tw_client.messages.create(to=new_row[12],
-#                                                    from_="+14803767375",
-#                                                    body=row[2])
-                continue
+                message = tw_client.messages.create(to=each_member[12],
+                                                    from_="+14803767375",
+                                                    body=each_reminder[2])
 
-        # Mark reminder as sent
-        cur2.execute("""update circly_reminder set reminder_sent = true where id = '%s'""" % row[0])
-
-
-#@sched.scheduled_job('cron', day_of_week='mon-fri', hour=17)
-#def scheduled_job():
-#    print('This job is run every weekday at 5pm.')
+            # Mark reminder as sent
+            member_cur.execute("""update circly_reminder set reminder_sent = true where id = '%s'""" % each_reminder[0])
 
 sched.start()
