@@ -15,8 +15,6 @@ sched = BlockingScheduler()
 
 @sched.scheduled_job('cron', second=5)
 def scheduled_job():
-    from circly.models import Member, Reminder
-
     import sendgrid
     from twilio.rest import TwilioRestClient
 
