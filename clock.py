@@ -54,13 +54,14 @@ def scheduled_job():
         for new_row in rows2:
             if new_row[2]:
                 # Send emails
-                message = sendgrid.Mail()
-                message.add_to('<' + new_row[2] + '>')
-                message.set_subject(row[1])
-                message.set_html(row[2])
-                message.set_text(row[2])
-                message.set_from('Circly Support <heal@circly.org>')
-                status, msg = sg.send(message)
+#                message = sendgrid.Mail()
+#                message.add_to('<' + new_row[2] + '>')
+#                message.set_subject(row[1])
+#                message.set_html(row[2])
+#                message.set_text(row[2])
+#                message.set_from('Circly Support <heal@circly.org>')
+#                status, msg = sg.send(message)
+                continue
             elif new_row[12]:
                 # Send SMS messages
 #                message = tw_client.messages.create(to=new_row[12],
