@@ -1,8 +1,11 @@
 import os
 import sys
 import logging
-
 import datetime
+
+import psycopg2
+import urlparse
+
 from apscheduler.schedulers.blocking import BlockingScheduler
 from django.core.mail import send_mail
 
@@ -18,10 +21,17 @@ def scheduled_job():
     from twilio.rest import TwilioRestClient
 #    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "event_meet.settings")
 
-    import psycopg2
-
     try:
-        conn = psycopg2.connect("dbname='d6mes5n1fk51ca' user='dhdzbpcuvrywuw' host='ec2-54-83-58-191.compute-1.amazonaws.com' port='5432' password='dbEhHY9varxV_wKKAQAwbVrU4O'")
+        urlparse.uses_netloc.append("postgres")
+        url = urlparse.urlparse(os.environ["DATABASE_URL"])
+
+        conn = psycopg2.connect(
+            database=url.path[1:],
+            user=url.username,
+            password=url.password,
+            host=url.hostname,
+            port=url.port
+        )
     except:
         print "I am unable to connect to the database"
 
