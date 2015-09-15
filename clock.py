@@ -6,8 +6,6 @@ import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from django.core.mail import send_mail
 
-from django.utils import timezone
-
 
 logging.basicConfig()
 
@@ -36,27 +34,24 @@ def scheduled_job():
     cur.execute("""select * from circly_reminder where reminder_send_date < now() and reminder_sent = false""")
     rows = cur.fetchall()
 
-#    reminders = Reminder.objects.filter(reminder_send_date__lte=timezone.now(), reminder_sent=False)
-
-#    for each_reminder in reminders:
     for row in rows:
         cur2 = conn.cursor()
-        cur2.execute("""select * from circly_member where member_id = %s""" % row[6])
+        cur2.execute("""select * from circly_member where id = %s""" % row[6])
 
         rows2 = cur2.fetchall()
 
         for new_row in rows2:
-            if row2[2]:
+            if new_row[2]:
                 # Send emails
-                send_mail(row[1], row[2], 'heal@circly.org', [row2[2]], fail_silently=False)
-            elif row2[12]:
+                send_mail(row[1], row[2], 'heal@circly.org', [new_row[2]], fail_silently=False)
+            elif new_row[12]:
                 # Send SMS messages
-                message = tw_client.messages.create(to=row2[12],
+                message = tw_client.messages.create(to=new_row[12],
                                                     from_="+14803767375",
                                                     body=row[2])
 
         # Mark reminder as sent
-        cur2.execute("""update circly_reminder set reminder_sent = true where reminder_id = %s""" % row[0])
+        cur2.execute("""update circly_reminder set reminder_sent = true where id = %s""" % row[0])
 
 
 #@sched.scheduled_job('cron', day_of_week='mon-fri', hour=17)
