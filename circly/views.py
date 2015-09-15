@@ -48,26 +48,26 @@ def dashboard(request):
     from .models import Member, Reminder
 
     # Pick a member to send reminder to - hardcode to Kennedy
-    m1 = Member.objects.get(member_name='Mike Caprio')
+#    m1 = Member.objects.get(member_name='Mike Caprio')
 
-    r1 = Reminder(member=m1,
-                 reminder_subject="Reminder! Tell Kennedy to self-examine his breast",
-                 reminder_message="Hey Mike, please tell Kennedy to do a breast self-exam! Go to the page at http://j.mp/SelfChec01 to get some ideas for what to talk about.",
-                 reminder_created_date=timezone.now(),
-                 reminder_send_date=timezone.now(),
-                )
-    r1.save()
+#    r1 = Reminder(member=m1,
+#                 reminder_subject="Reminder! Tell Kennedy to self-examine his breast",
+#                 reminder_message="Hey Mike, please tell Kennedy to do a breast self-exam! Go to the page at http://j.mp/SelfChec01 to get some ideas for what to talk about.",
+#                 reminder_created_date=timezone.now(),
+#                 reminder_send_date=timezone.now(),
+#                )
+#    r1.save()
 
-    m2 = Member.objects.get(member_name='Madelena Mak')
+#    m2 = Member.objects.get(member_name='Madelena Mak')
 
-    r2 = Reminder(member=m2,
-                 reminder_subject="Reminder! Tell Kennedy to self-examine his breast",
-                 reminder_message="Hey Mike, please tell Kennedy to do a breast self-exam! Go to the page at http://j.mp/SelfChec01 to get some ideas for what to talk about.",
-                 reminder_created_date=timezone.now(),
-                 reminder_send_date=timezone.now() + datetime.timedelta(seconds=20),
-                )
+#    r2 = Reminder(member=m2,
+#                 reminder_subject="Reminder! Tell Kennedy to self-examine his breast",
+#                 reminder_message="Hey Mike, please tell Kennedy to do a breast self-exam! Go to the page at http://j.mp/SelfChec01 to get some ideas for what to talk about.",
+#                 reminder_created_date=timezone.now(),
+#                 reminder_send_date=timezone.now() + datetime.timedelta(seconds=20),
+#                )
 
-    r2.save()
+#    r2.save()
 
     template = loader.get_template('circly/dashboard.html')
     context = RequestContext(request, {
