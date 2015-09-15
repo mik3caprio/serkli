@@ -7,7 +7,6 @@ import psycopg2
 import urlparse
 
 from apscheduler.schedulers.blocking import BlockingScheduler
-from django.core.mail import send_mail
 
 
 logging.basicConfig()
@@ -18,8 +17,8 @@ sched = BlockingScheduler()
 def scheduled_job():
     from circly.models import Member, Reminder
 
+    import sendgrid
     from twilio.rest import TwilioRestClient
-#    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "event_meet.settings")
 
     try:
         urlparse.uses_netloc.append("postgres")
@@ -39,6 +38,10 @@ def scheduled_job():
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     tw_client = TwilioRestClient(account_sid, auth_token)
 
+    sg_user = os.environ['EMAIL_HOST_USER_VAR']
+    sg_password = os.environ['EMAIL_HOST_PASSWORD_VAR']
+    sg = sendgrid.SendGridClient(sg_user, sg_password)
+
     # Select all Reminders that are unsent
     cur = conn.cursor()
     cur.execute("""select * from circly_reminder where reminder_send_date < now() and reminder_sent = false""")
@@ -53,7 +56,13 @@ def scheduled_job():
         for new_row in rows2:
             if new_row[2]:
                 # Send emails
-                send_mail(row[1], row[2], 'heal@circly.org', [new_row[2]], fail_silently=False)
+                message = sendgrid.Mail()
+                message.add_to('<' + new_row[2] + '>')
+                message.set_subject(row[1])
+                message.set_html(row[2])
+                message.set_text(row[2])
+                message.set_from('Circly Support <heal@circly.org>)
+                status, msg = sg.send(message)
             elif new_row[12]:
                 # Send SMS messages
                 message = tw_client.messages.create(to=new_row[12],

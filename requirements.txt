@@ -13,7 +13,9 @@ phonenumbers==7.0.9
 psycopg2==2.6.1
 py-moneyed==0.6.0
 pytz==2015.4
+sendgrid==1.4.2
 six==1.9.0
+smtpapi==0.2.0
 South==1.0.2
 static3==0.6.1
 twilio==4.5.0
