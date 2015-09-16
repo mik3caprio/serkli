@@ -10,9 +10,6 @@ class MemberInline(admin.TabularInline):
     model = Member
 
 class CircleAdmin(admin.ModelAdmin):
-#    fields = ['event_date', 'event_name', 'event_id']
-#    list_display = ('event_date', 'event_name')
-#    list_filter = ['event_date']
     inlines = [MemberInline]
 
 admin.site.register(Circle, CircleAdmin)

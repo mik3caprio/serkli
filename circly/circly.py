@@ -12,18 +12,10 @@ import eventbrite
 from url_request import dorequest
 
 
-#EVENTBRITE_EVENT_ID = os.environ['EVENTBRITE_EVENT_ID']
-EVENTBRITE_EVENT_ID ='17475222862'
-
-#EVENTBRITE_OAUTH_TOKEN = os.environ['EVENTBRITE_OAUTH_TOKEN']
-EVENTBRITE_OAUTH_TOKEN='OZWZO4LQPRZMGXMAJLB3'
-
-
 # Instantiate the Eventbrite API client.
+EVENTBRITE_EVENT_ID = os.environ['EVENTBRITE_EVENT_ID']
+EVENTBRITE_OAUTH_TOKEN = os.environ['EVENTBRITE_OAUTH_TOKEN']
 eventbrite = eventbrite.Eventbrite(EVENTBRITE_OAUTH_TOKEN)
-
-
-
 
 @app.route('/')
 def index():
@@ -79,18 +71,6 @@ def index():
         event=event,
         attendees=checked_attendees
     )
-
-
-#{
-#    "attendees": [
-#        {
-#            "id": "561936325", 
-#            "profile": {
-#                "email": "mik3cap@gmail.com", 
-#                "name": "Michael Caprio", 
-#            }, 
-#            "checked_in": false, 
-#        }, 
 
 
 def add_entry(attendee_id):
@@ -176,7 +156,7 @@ def create_pool(event_id):
     pool_deque = deque([])
 
     # Get the list of all attendees for an event; only -> "checked_in": true
-    eventbrite = Eventbrite('OZWZO4LQPRZMGXMAJLB3')
+    eventbrite = Eventbrite(EVENTBRITE_OAUTH_TOKEN)
     this_event = eventbrite.get('/events/' + event_id + '/attendees')
 
     # Add all attendee IDs to a deque as many times as the ID

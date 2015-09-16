@@ -15,9 +15,6 @@ urlpatterns = [
     # Add our Twilio URLs
     url(r'^flow/$', views.flow, name='flow'),
     url(r'^checkmeout/$', views.checkmeout, name='checkmeout'),
-    url(r'^sms/$', views.sms, name='sms'),
-    url(r'^ring/$', views.ring, name='ring'),
-    url(r'^email/$', views.email, name='email'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^network/$', views.network, name='network'),
 ]
