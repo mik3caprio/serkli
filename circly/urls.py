@@ -13,6 +13,7 @@ urlpatterns = [
 #    url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
 
     # Add our Twilio URLs
+    url(r'^submitname/$', views.submitname, name='submitname'),
     url(r'^flow/$', views.flow, name='flow'),
     url(r'^checkmeout/$', views.checkmeout, name='checkmeout'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),

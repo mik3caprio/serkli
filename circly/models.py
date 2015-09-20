@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 from django.utils import timezone
 
-# Create your models here.
+
 class Event(models.Model):
     event_id = models.CharField(max_length=50)
     event_name = models.CharField(max_length=200)
@@ -10,6 +10,7 @@ class Event(models.Model):
 
     def __unicode__(self):
         return self.event_name
+
 
 class Attendee(models.Model):
     event = models.ForeignKey(Event)
@@ -24,7 +25,8 @@ class Attendee(models.Model):
 
 class Circle(models.Model):
     circle_name = models.CharField(max_length=100)
-    circle_created_date = models.DateTimeField('date of event')
+    circle_created_date = models.DateTimeField('circle created on')
+    circle_reminders_refreshed_on_date = models.DateTimeField('reminders refreshed on', null=True, blank=True)
 
 
     def __unicode__(self):
@@ -33,7 +35,9 @@ class Circle(models.Model):
 
 class Member(models.Model):
     circle = models.ForeignKey(Circle)
+    circle_owner = models.BooleanField(default=False)
     member_name = models.CharField(max_length=100)
+    member_created_date = models.DateTimeField('member created on', null=True, blank=True)
     member_email = models.CharField(max_length=200, null=True, blank=True)
     member_phone = models.CharField(max_length=25, null=True, blank=True)
 
@@ -99,6 +103,8 @@ class Member(models.Model):
 
     cancer_family = models.SmallIntegerField(default=0)
 
+    member_profile_entered_date = models.DateTimeField('profile entered on', null=True, blank=True)
+
 
     def risk(self):
         female_risk_percentage = {self.UNDER_20: 0.0000,
@@ -112,7 +118,11 @@ class Member(models.Model):
 
         male_risk_percentage = 0.0010
 
-        return #self.year_in_school in (self.JUNIOR, self.SENIOR)
+        return
+
+
+    def add_reminders(self):
+        return
 
 
     def __unicode__(self):
@@ -126,13 +136,9 @@ class Reminder(models.Model):
     reminder_message = models.CharField(max_length=150)
     reminder_created_date = models.DateTimeField('reminder created on')
     reminder_send_date = models.DateTimeField('send reminder on', null=True, blank=True)
-    reminder_sent = models.BooleanField(default=False)
+    reminder_sent_on_date = models.DateTimeField('reminder sent on', null=True, blank=True)
+    member_reminded_on_date = models.DateTimeField('member reminded on', null=True, blank=True)
 
-    def was_sent():
-        self.reminder_sent = True
-        self.save()
-
-        return
 
     def is_an_email():
         if (self.member.member_email):
@@ -140,15 +146,13 @@ class Reminder(models.Model):
 
         return False
 
+
     def is_an_SMS():
         if (self.member.member_phone):
             return True
 
         return False
 
+
     def __unicode__(self):
         return unicode(self.id)
-
-
-
-#class MemberHistory(models.Model):
