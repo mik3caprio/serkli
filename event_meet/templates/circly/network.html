@@ -19,13 +19,13 @@
       <div class="col-md-8 col-md-offset-2">
         <form class="form-horizontal" action="{% url 'connect:submitcircle' %}" method="post">
 
-          {% for i in "2345678" %}
+          {% for i in num_range_str %}
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="name_{{ i }}" class="col-sm-4 control-label">Member #{{ i }}</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="name_{{ i }}" name="name_{{ i }}" placeholder="Name">
+                  <input type="text" class="form-control" id="name_{{ i }}" name="cm-name_{{ i }}" placeholder="Name">
                 </div><!--/col-->
               </div><!--/form-group-->
             </div><!--/col-->
@@ -33,7 +33,7 @@
               <div class="form-group">
                 <label for="contact_{{ i }}" class="col-sm-4 control-label">Contact</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="contact_{{ i }}" name="contact_{{ i }}" placeholder="Email or Mobile Phone">
+                  <input type="text" class="form-control" id="contact_{{ i }}" name="cm-contact_{{ i }}" placeholder="Email or Mobile Phone">
                 </div><!--/col-->
               </div><!--/form-group-->
             </div><!--/col-->

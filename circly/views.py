@@ -10,6 +10,9 @@ from django.core.urlresolvers import reverse
 from twilio.twiml import Response
 
 
+CIRCLE_SIZE = 8
+
+
 def index(request):
     context = {}
 
@@ -99,66 +102,92 @@ def submitprofile(request, member):
 
 
 def network(request, member):
-    from .models import Circle, Member, Reminder
+    from .models import Circle, Member
 
-    # Create reminders to join the circle for all members except circle owner
+    count = CIRCLE_SIZE
+    contact_range_str = ""
 
-#    m2 = Member.objects.get(member_name='Madelena Mak')
+    while count != 1:
+        contact_range_str = contact_range_str + str(count)
+        count = count - 1
 
-#    r2 = Reminder(member=m2,
-#                 reminder_subject="Reminder! Tell Kennedy to self-examine their breast",
-#                 reminder_message="Hey Mike, please tell Kennedy to do a breast self-exam! Go to the page at http://j.mp/SelfChec01 to get some ideas for what to talk about.",
-#                 reminder_created_date=timezone.now(),
-#                 reminder_send_date=timezone.now() + datetime.timedelta(seconds=20),
-#                )
+    # Reverse the string of numbers
+    contact_range_str = contact_range_str[::-1]
 
-#    r2.save()
-
-    context = {}
+    context = {'num_range_str':contact_range_str}
     return render(request, 'circly/network.html', context)
 
 
-def submitcircle(request):
-    from .models import Circle, Member
+def submitcircle(request, member):
+    from .models import Circle, Member, Reminder
 
-    first_name = request.POST.get('cm-name', "")
+    new_member = get_object_or_404(Member, pk=member)
+    new_circle = get_object_or_404(Circle, pk=new_member.circle.id)
 
-    if (first_name != ""):
-        # Create a circle
-        new_circle = Circle(circle_name=first_name + "'s circle",
-                            circle_created_date=timezone.now(),)
-        new_circle.save()
+    count = 2
+    posted_members = {}
 
-        # Create our new member
-        new_member = Member(circle=new_circle,
-                            circle_owner=True,
-                            member_name=first_name,
-                            member_created_date=timezone.now(),)
-        new_member.save()
+    while count <= CONTACT_RANGE:
+        member_contact = {}
 
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('connect:network', 
-                                            kwargs={'member':new_member.id}))
-    else:
-        # Redisplay the name submission form
-        return render(request, 
-                      'circly/index.html', 
-                      {'error_message': "You didn't enter a name.",})
+        current_name = request.POST.get('cm-name_' + count, "")
+        current_contact = request.POST.get('cm-contact_' + count, "")
+
+        if (current_name != ""):
+            if (current_contact != ""):
+                # Check to see if current contact info is valid phone or email
+                if (is_phone(current_contact)):
+                    member_contact["contact_type"] = "phone"
+                elif (is_email(current_contact)):
+                    member_contact["contact_type"] = "email"
+
+                member_contact["contact_info"] = current_contact
+
+                posted_members[current_name] = member_contact
+
+    for each_member in posted_members.keys():
+        # Create new members and add to the circle
+        if (posted_members[each_member]["contact_type"] == "email"):
+            next_member = Member(circle=new_circle,
+                                 circle_owner=False,
+                                 member_name=each_member,
+                                 member_email=posted_members[each_member]["contact_info"],
+                                 member_created_date=timezone.now(),)
+        elif (posted_members[each_member]["contact_type"] == "phone"):
+            next_member = Member(circle=new_circle,
+                                 circle_owner=False,
+                                 member_name=each_member,
+                                 member_phone=posted_members[each_member]["contact_info"],
+                                 member_created_date=timezone.now(),)
+
+        next_member.save()
+
+        # Create reminders for all new members to join the circle
+        remind = Reminder(member=next_member,
+                          reminder_subject=" would like you to join their circle of support",
+                          reminder_message="Hey Mike, please tell Kennedy to do a breast self-exam! Go to the page at http://j.mp/SelfChec01 to get some ideas for what to talk about.",
+                          reminder_created_date=timezone.now(),
+                          reminder_send_date=timezone.now(), )
+        remind.save()
+
+    # Always return an HttpResponseRedirect after successfully dealing
+    # with POST data. This prevents data from being posted twice if a
+    # user hits the Back button.
+    return HttpResponseRedirect(reverse('connect:dashboard', 
+                                        kwargs={'member':new_member.id}))
 
 
 def dashboard(request, member):
     from .models import Circle, Member
 
-    # Display all members of the circle with name and contact info
+    new_member = get_object_or_404(Member, pk=member)
+    new_circle = get_object_or_404(Circle, pk=new_member.circle.id)
 
-    template = loader.get_template('circly/dashboard.html')
-    context = RequestContext(request, {
-#        'latest_question_list': latest_question_list,
-    })
+    # Get all members of the circle, display their join status
+    
 
-    return HttpResponse(template.render(context))
+    context = {'member':new_member}
+    return render(request, 'circly/dashboard.html', context)
 
 
 def checkmeout(request):

@@ -1,0 +1,84 @@
+{% extends "circly/base.html" %}
+
+{% block title %}Sign Up | Circly{% endblock %}
+
+{% block contentdivstart %}<div id="flow">{% endblock %}
+
+{% block contentdivfinish %}
+<section class="getstarted">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="title">
+          <h3>Hello {{ member.member_name }}</h3>
+          <hr/>
+        </div><!--/title-->
+      </div><!--/col-->
+    </div><!--/row-->
+    <div class="row">
+      <div class="col-md-12">
+        <form class="madlib" action="{% url 'connect:submitprofile' %}" method="post">
+        {% csrf_token %}
+          <p>I am a
+            <select id="fChromosome" name="cm-chromosome">
+              <option value="XX" selected>XX (female)</option>
+              <option value="XY">XY (male)</option>
+            </select>
+            that is
+            <select id="fAge" name="cm-age">
+              <option value="u20" selected>under 20</option>
+              <option value="20-29">between 20 and 29</option>
+              <option value="30-39">between 30 and 39</option>
+              <option value="40-44">between 40 and 44</option>
+              <option value="45-49">between 45 and 49</option>
+              <option value="50-59">between 50 and 59</option>
+              <option value="60o">60 and over</option>
+            </select>
+            years old and my
+            <label for="fEthnicity">ethnicity</label>
+            is
+            <select id="fEthnicity" name="cm-ethnicity">
+              <option value="CNH" selected>Caucasian Non-Hispanic</option>
+              <option value="AFR">African American</option>
+              <option value="HIS">Hispanic</option>
+              <option value="ASI">Asian</option>
+              <option value="OTH">Other race or ethnicity</option>
+            </select>
+            . I 
+            <select id="fDrink" name="cm-drink">
+              <option value="no" selected>don't ever</option>
+              <option value="yes">do</option>
+            </select>
+            drink,
+            <select id="fSmoke" name="cm-smoke">
+              <option value="no" selected>don't ever</option>
+              <option value="yes">do</option>
+            </select>
+            <label for="fSmoke">smoke</label>
+            , and
+            <select id="fExercise" name="cm-exercise">
+              <option value="no" selected>don't ever</option>
+              <option value="yes">do</option>
+            </select>
+            <label for="fExercise">exercise</label>
+            with a
+            <label for="fBmi">BMI</label>
+            of
+            <select id="fBmi" name="cm-bmi">
+              <option value="u25" selected>Under 25</option>
+              <option value="25o">25 and over</option>
+            </select>
+            . I have <select id="fRelatives" name="cm-relatives">
+              <option value="0" selected>0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select> <label for="fRelatives">immediate relatives (mother, daughter, sibling)</label> diagnosed with breast cancer.</p>
+
+          <input type="submit" class="btn btn-primary btn-lg" value="Next" />
+        </form>
+      </div><!--/col-->
+    </div><!--/row-->
+  </div><!--/container-->
+</section>
+{% endblock %}
