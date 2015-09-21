@@ -3,19 +3,13 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    # ex: /polls/
     url(r'^$', views.index, name='index'),
-    # ex: /polls/5/
-#    url(r'^(?P<question_id>[0-9]+)/$', views.detail, name='detail'),
-    # ex: /polls/5/results/
-#    url(r'^(?P<question_id>[0-9]+)/results/$', views.results, name='results'),
-    # ex: /polls/5/vote/
-#    url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
 
-    # Add our Twilio URLs
     url(r'^submitname/$', views.submitname, name='submitname'),
-    url(r'^flow/$', views.flow, name='flow'),
+    url(r'^flow/(?P<member>[0-9]+)', views.flow, name='flow'),
+    url(r'^submitprofile/$', views.submitprofile, name='submitprofile'),
+    url(r'^network/(?P<member>[0-9]+)$', views.network, name='network'),
+    url(r'^submitcircle/$', views.submitcircle, name='submitcircle'),
+    url(r'^dashboard/(?P<member>[0-9]+)$', views.dashboard, name='dashboard'),
     url(r'^checkmeout/$', views.checkmeout, name='checkmeout'),
-    url(r'^dashboard/$', views.dashboard, name='dashboard'),
-    url(r'^network/$', views.network, name='network'),
 ]

@@ -10,21 +10,19 @@
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <div class="title">
-          <h3>Hello Kennedy</h3>
+          <h3>Hello {{ member.member_name }}</h3>
           <hr/>
         </div><!--/title-->
       </div><!--/col-->
     </div><!--/row-->
     <div class="row">
       <div class="col-md-12">
-
-
-
-        <form class="madlib">
+        <form class="madlib" action="{% url 'connect:submitprofile' %}" method="post">
+        {% csrf_token %}
           <p>I am a
             <select id="fChromosome" name="cm-chromosome">
-              <option value="xx" selected>XX (female)</option>
-              <option value="xy">XY (male)</option>
+              <option value="XX" selected>XX (female)</option>
+              <option value="XY">XY (male)</option>
             </select>
             that is
             <select id="fAge" name="cm-age">
@@ -33,19 +31,18 @@
               <option value="30-39">between 30 and 39</option>
               <option value="40-44">between 40 and 44</option>
               <option value="45-49">between 45 and 49</option>
-              <option value="50-54">between 50 and 54</option>
-              <option value="55-59">between 55 and 59</option>
+              <option value="50-59">between 50 and 59</option>
               <option value="60o">60 and over</option>
             </select>
             years old and my
             <label for="fEthnicity">ethnicity</label>
             is
             <select id="fEthnicity" name="cm-ethnicity">
-              <option value="caucasian" selected>Caucasian Non-Hispanic</option>
-              <option value="african">African American</option>
-              <option value="hispanic">Hispanic</option>
-              <option value="asian">Asian</option>
-              <option value="other">Other race or ethnicity</option>
+              <option value="CNH" selected>Caucasian Non-Hispanic</option>
+              <option value="AFR">African American</option>
+              <option value="HIS">Hispanic</option>
+              <option value="ASI">Asian</option>
+              <option value="OTH">Other race or ethnicity</option>
             </select>
             . I 
             <select id="fDrink" name="cm-drink">
@@ -59,7 +56,7 @@
             </select>
             <label for="fSmoke">smoke</label>
             , and
-            <select id="fExercise" name="cm-exerciser">
+            <select id="fExercise" name="cm-exercise">
               <option value="no" selected>don't ever</option>
               <option value="yes">do</option>
             </select>
@@ -69,11 +66,16 @@
             of
             <select id="fBmi" name="cm-bmi">
               <option value="u25" selected>Under 25</option>
-              <option value="o25">Over 25</option>
+              <option value="25o">25 and over</option>
             </select>
-            .</p>
-          <!-- <button type="button" class="btn btn-primary btn-lg">Next</button> -->
-          <a href="{% url 'connect:network' %}" class="btn btn-primary btn-lg">Next</a>
+            . I have <select id="fRelatives" name="cm-relatives">
+              <option value="0" selected>0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select> <label for="fRelatives">immediate relatives (mother, daughter, sibling)</label> diagnosed with breast cancer.</p>
+
+          <input type="submit" class="btn btn-primary btn-lg" value="Next" />
         </form>
       </div><!--/col-->
     </div><!--/row-->

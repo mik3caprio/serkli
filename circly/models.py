@@ -41,13 +41,13 @@ class Member(models.Model):
     member_email = models.CharField(max_length=200, null=True, blank=True)
     member_phone = models.CharField(max_length=25, null=True, blank=True)
 
-    UNDER_20 = '<20'
+    UNDER_20 = 'u20'
     BTWN_20_29 = '20-29'
     BTWN_30_39 = '30-39'
     BTWN_40_44 = '40-44'
     BTWN_45_49 = '45-49'
     BTWN_50_59 = '50-59'
-    OVER_60 = '>60'
+    OVER_60 = '60o'
     AGE_RANGE_CHOICES = (
         (UNDER_20, 'under 20'),
         (BTWN_20_29, 'between 20 and 29'),
@@ -87,8 +87,8 @@ class Member(models.Model):
                                        choices=ETHNICITY_CHOICES,
                                        default=WHITE)
 
-    BMI_UNDER = '<25'
-    BMI_OVER = '25>'
+    BMI_UNDER = 'u25'
+    BMI_OVER = '25o'
     BMI_CHOICES = (
         (BMI_UNDER, 'is less than 25'),
         (BMI_OVER, 'is 25 or greater'),
@@ -99,7 +99,7 @@ class Member(models.Model):
 
     smoker = models.BooleanField(default=False)
     drinker = models.BooleanField(default=False)
-    exercises = models.BooleanField(default=False)
+    exercises = models.BooleanField(default=True)
 
     cancer_family = models.SmallIntegerField(default=0)
 

@@ -37,24 +37,69 @@ def submitname(request):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return HttpResponseRedirect(reverse('connect:flow', args=(new_circle, new_member,)))
+        return HttpResponseRedirect(reverse('connect:flow', 
+                                            kwargs={'member':new_member.id}))
     else:
         # Redisplay the name submission form
-        return render(request, 'circly/index.html', {
-            'error_message': "You didn't enter a name.",})
+        return render(request, 
+                      'circly/index.html', 
+                      {'error_message': "You didn't enter a name.",})
 
 
-def flow(request, a_circle, a_member):
+def flow(request, member):
     from .models import Circle, Member
 
-#    p = get_object_or_404(Question, pk=question_id)
+    new_member = get_object_or_404(Member, pk=member)
 
-    context = {}
+    context = {'member':new_member}
     return render(request, 'circly/flow.html', context)
 
 
-def network(request):
+def submitprofile(request, member):
     from .models import Circle, Member
+
+    new_member = get_object_or_404(Member, pk=member)
+
+    chromosome = request.POST.get('cm-chromosome', "")
+    age = request.POST.get('cm-age', "")
+    ethnicity = request.POST.get('cm-ethnicity', "")
+    drink = request.POST.get('cm-drink', "")
+    smoke = request.POST.get('cm-smoke', "")
+    exercise = request.POST.get('cm-exercise', "")
+    bmi = request.POST.get('cm-bmi', "")
+    relatives = int(request.POST.get('cm-relatives', 0))
+
+    new_member.age_range = age
+    new_member.sex_range = chromosome
+    new_member.ethnicity_range = ethnicity
+    new_member.bmi_range = bmi
+    new_member.cancer_family = relatives
+
+    if (drink == "yes"):
+        new_member.drinker = True
+    else:
+        new_member.drinker = False
+
+    if (smoke == "yes"):
+        new_member.smoker = True
+    else:
+        new_member.smoker = False
+
+    if (exercise == "yes"):
+        new_member.exercises = True
+    else:
+        new_member.exercises = False
+
+    new_member.member_profile_entered_date = timezone.now()
+
+    new_member.save()
+
+    return HttpResponseRedirect(reverse('connect:network', 
+                                        kwargs={'member':new_member.id}))
+
+
+def network(request, member):
+    from .models import Circle, Member, Reminder
 
     # Create reminders to join the circle for all members except circle owner
 
@@ -73,7 +118,37 @@ def network(request):
     return render(request, 'circly/network.html', context)
 
 
-def dashboard(request):
+def submitcircle(request):
+    from .models import Circle, Member
+
+    first_name = request.POST.get('cm-name', "")
+
+    if (first_name != ""):
+        # Create a circle
+        new_circle = Circle(circle_name=first_name + "'s circle",
+                            circle_created_date=timezone.now(),)
+        new_circle.save()
+
+        # Create our new member
+        new_member = Member(circle=new_circle,
+                            circle_owner=True,
+                            member_name=first_name,
+                            member_created_date=timezone.now(),)
+        new_member.save()
+
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('connect:network', 
+                                            kwargs={'member':new_member.id}))
+    else:
+        # Redisplay the name submission form
+        return render(request, 
+                      'circly/index.html', 
+                      {'error_message': "You didn't enter a name.",})
+
+
+def dashboard(request, member):
     from .models import Circle, Member
 
     # Display all members of the circle with name and contact info
