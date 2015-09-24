@@ -6,6 +6,7 @@ from django.template import RequestContext, loader
 from django_twilio.decorators import twilio_view
 from django.utils import timezone
 from django.core.urlresolvers import reverse
+from django.views import generic
 
 from twilio.twiml import Response
 
@@ -13,10 +14,19 @@ from twilio.twiml import Response
 CIRCLE_SIZE = 8
 
 
-def index(request):
-    context = {}
+class IndexView(generic.ListView):
+    template_name = 'circly/index.html'
+    context_object_name = ''
 
-    return render(request, 'circly/index.html', context)
+#    def get_queryset(self):
+#        """Return the last five published questions."""
+#        return Question.objects.order_by('-pub_date')[:5]
+
+
+#def index(request):
+#    context = {}
+#
+#    return render(request, 'circly/index.html', context)
 
 
 def submitname(request):
