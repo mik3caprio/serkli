@@ -7,6 +7,7 @@ from django_twilio.decorators import twilio_view
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.views import generic
+from django.forms.models import model_to_dict
 
 from twilio.twiml import Response
 
@@ -18,9 +19,9 @@ class IndexView(generic.ListView):
     template_name = 'circly/index.html'
     context_object_name = ''
 
-#    def get_queryset(self):
-#        """Return the last five published questions."""
-#        return Question.objects.order_by('-pub_date')[:5]
+    def get_queryset(self):
+        """Return the last five published questions."""
+        return #Question.objects.order_by('-pub_date')[:5]
 
 
 #def index(request):
@@ -47,11 +48,21 @@ def submitname(request):
                             member_created_date=timezone.now(),)
         new_member.save()
 
+
+        new_circle_dict = model_to_dict(new_circle)
+        new_member_dict = model_to_dict(new_member)
+
+        new_circle_dict['circle_created_date'] = new_circle_dict['circle_created_date'].isoformat()
+        new_member_dict['member_created_date'] = new_member_dict['member_created_date'].isoformat()
+
+        request.session['current_circle'] = new_circle_dict
+        request.session['current_member'] = new_member_dict
+
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('connect:flow', 
-                                            kwargs={'member':new_member.id}))
+                                            kwargs={}))
     else:
         # Redisplay the name submission form
         return render(request, 
@@ -59,19 +70,25 @@ def submitname(request):
                       {'error_message': "You didn't enter a name.",})
 
 
-def flow(request, member):
+def flow(request):
     from .models import Circle, Member
 
-    new_member = get_object_or_404(Member, pk=member)
+    new_member_test = request.session.get('current_member', None)
+
+    if new_member_test:
+        new_member = get_object_or_404(Member, pk=new_member_test['id'])
 
     context = {'member':new_member}
     return render(request, 'circly/flow.html', context)
 
 
-def submitprofile(request, member):
+def submitprofile(request):
     from .models import Circle, Member
 
-    new_member = get_object_or_404(Member, pk=member)
+    new_member_test = request.session.get('current_member', None)
+
+    if new_member_test:
+        new_member = get_object_or_404(Member, pk=new_member_test['id'])
 
     chromosome = request.POST.get('cm-chromosome', "")
     age = request.POST.get('cm-age', "")
@@ -108,10 +125,10 @@ def submitprofile(request, member):
     new_member.save()
 
     return HttpResponseRedirect(reverse('connect:network', 
-                                        kwargs={'member':new_member.id}))
+                                        kwargs={}))
 
 
-def network(request, member):
+def network(request):
     from .models import Circle, Member
 
     count = CIRCLE_SIZE
@@ -125,14 +142,22 @@ def network(request, member):
     contact_range_str = contact_range_str[::-1]
 
     context = {'num_range_str':contact_range_str}
+
     return render(request, 'circly/network.html', context)
 
 
-def submitcircle(request, member):
+def submitcircle(request):
     from .models import Circle, Member, Reminder
 
-    new_member = get_object_or_404(Member, pk=member)
-    new_circle = get_object_or_404(Circle, pk=new_member.circle.id)
+    new_member_test = request.session.get('current_member', None)
+
+    if new_member_test:
+        new_member = get_object_or_404(Member, pk=new_member_test['id'])
+
+    new_circle_test = request.session.get('current_circle', None)
+
+    if new_circle_test:
+        new_circle = get_object_or_404(Circle, pk=new_circle_test['id'])
 
     count = 2
     posted_members = {}
@@ -184,14 +209,21 @@ def submitcircle(request, member):
     # with POST data. This prevents data from being posted twice if a
     # user hits the Back button.
     return HttpResponseRedirect(reverse('connect:dashboard', 
-                                        kwargs={'member':new_member.id}))
+                                        kwargs={}))
 
 
-def dashboard(request, member):
+def dashboard(request):
     from .models import Circle, Member
 
-    new_member = get_object_or_404(Member, pk=member)
-    new_circle = get_object_or_404(Circle, pk=new_member.circle.id)
+    new_member_test = request.session.get('current_member', None)
+
+    if new_member_test:
+        new_member = get_object_or_404(Member, pk=new_member_test['id'])
+
+    new_circle_test = request.session.get('current_circle', None)
+
+    if new_circle_test:
+        new_circle = get_object_or_404(Circle, pk=new_circle_test['id'])
 
     # Get all members of the circle, display their join status
     
