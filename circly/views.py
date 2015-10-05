@@ -11,12 +11,12 @@ from django.views import generic
 from choices_member import *
 from forms import *
 from helpers import set_member_and_circle, get_current_member, get_current_circle
+from helpers import get_member_id_from_invite
 from helpers import is_phone, is_email
 
-from models import Circle, Member, Reminder
+import phonenumbers
 
-CIRCLE_MAX_SIZE = 8
-CIRCLE_MIN_SIZE = 4
+from models import Circle, Member, Reminder
 
 
 def index(request):
@@ -83,11 +83,14 @@ def invite(request):
         profile_form = FlowForm(request.POST)
 
         if profile_form.is_valid():
-            return HttpResponseRedirect(reverse("connect:submitprofile", 
+            return HttpResponseRedirect(reverse("connect:submitinvite", 
                                         kwargs={}))
     else:
+        # Check for valid invite code
+        invite_code = ""
+
         # Get member from invite code
-        invite_member_id = get_member_id_from_invite()
+        invite_member_id = get_member_id_from_invite(invite_code)
 
         new_member = get_object_or_404(Member, pk=invite_member_id)
         new_circle = get_object_or_404(Circle, pk=new_member.circle.id)
@@ -118,17 +121,17 @@ def submitinvite(request):
     new_member.bmi_range = bmi
     new_member.cancer_family = relatives
 
-    if (drink == "yes"):
+    if (drink == YES):
         new_member.drinker = True
     else:
         new_member.drinker = False
 
-    if (smoke == "yes"):
+    if (smoke == YES):
         new_member.smoker = True
     else:
         new_member.smoker = False
 
-    if (exercise == "yes"):
+    if (exercise == YES):
         new_member.exercises = True
     else:
         new_member.exercises = False
@@ -159,17 +162,17 @@ def submitprofile(request):
     new_member.bmi_range = bmi
     new_member.cancer_family = relatives
 
-    if (drink == "yes"):
+    if (drink == YES):
         new_member.drinker = True
     else:
         new_member.drinker = False
 
-    if (smoke == "yes"):
+    if (smoke == YES):
         new_member.smoker = True
     else:
         new_member.smoker = False
 
-    if (exercise == "yes"):
+    if (exercise == YES):
         new_member.exercises = True
     else:
         new_member.exercises = False
@@ -185,17 +188,7 @@ def submitprofile(request):
 def network(request):
     new_member = get_current_member(request)
 
-    count = CIRCLE_MAX_SIZE
-    contact_range_str = ""
-
-    while count != 1:
-        contact_range_str = contact_range_str + str(count)
-        count = count - 1
-
-    # Reverse the string of numbers
-    contact_range_str = contact_range_str[::-1]
-
-    context = {"member":new_member, "num_range_str":contact_range_str, }
+    context = {"member":new_member, "num_range_str":settings.CONTACT_RANGE_STR, "custom_errors":""}
     return render(request, "circly/network.html", context)
 
 
@@ -206,11 +199,14 @@ def submitcircle(request):
     count = 2
     posted_members = {}
 
-    while count <= CIRCLE_MAX_SIZE:
+    custom_errors = ""
+
+
+    while count <= settings.CIRCLE_MAX_SIZE:
         member_contact = {}
 
-        current_name = request.POST.get("name_" + count, None)
-        current_contact = request.POST.get("contact_" + count, None)
+        current_name = request.POST.get("name_" + str(count), None)
+        current_contact = request.POST.get("contact_" + str(count), None)
 
         if (current_name):
             if (current_contact):
@@ -220,56 +216,70 @@ def submitcircle(request):
                 elif (is_email(current_contact)):
                     member_contact["contact_type"] = "email"
                 else:
-                    # Bad data kick out
-                    context = {"member":new_member, "num_range_str":contact_range_str, }
-                    return render(request, "circly/network.html", context)
+                    # Bad data error
+                    custom_errors += "<li>contact_" + str(count) + " must be either a valid phone number OR email</li>"
 
                 member_contact["contact_info"] = current_contact
 
                 posted_members[current_name] = member_contact
             else:
-                # Missing data kick out
-                context = {"member":new_member, "num_range_str":contact_range_str, }
-                return render(request, "circly/network.html", context)
+                # Missing contact data error
+                custom_errors += "<li>contact_" + str(count) + " is missing</li>"
         else:
-            # Missing data kick out
-            context = {"member":new_member, "num_range_str":contact_range_str, }
-            return render(request, "circly/network.html", context)
+            # Missing name data error
+            custom_errors += "<li>name_" + str(count) + " is missing</li>"
+
+        count += 1
 
     # Check to see if we have minimum more members added
-    if len(posted_members) >= (CIRCLE_MIN_SIZE - 1):
-        import phonenumbers
-        
-        for each_member in posted_members.keys():
-            # Create new members and add to the circle
-            if (posted_members[each_member]["contact_type"] == "email"):
-                next_member = Member(circle=new_circle,
-                                     circle_owner=False,
-                                     member_name=each_member,
-                                     member_email=posted_members[each_member]["contact_info"],
-                                     member_created_date=timezone.now(), )
-            elif (posted_members[each_member]["contact_type"] == "phone"):
-                next_member = Member(circle=new_circle,
-                                     circle_owner=False,
-                                     member_name=each_member,
-                                     member_phone=phonenumbers.format_number(posted_members[each_member]["contact_info"], 
-                                                                             phonenumbers.PhoneNumberFormat.E164),
-                                     member_created_date=timezone.now(), )
+    if len(posted_members) >= (settings.CIRCLE_MIN_SIZE - 1):
+        custom_errors += "<li>You need at least " + str(settings.CIRCLE_MIN_SIZE) + " members (including yourself) in your circle</li>"
 
-            next_member.save()
+    if custom_errors != "":
+        custom_errors = "<p><ul>" + custom_errors + "</ul></p>"
 
-            # Create invite code with link for profile sign up
+        # If there are any errors, kick out and display them
+        context = {"member":new_member, "num_range_str":settings.CONTACT_RANGE_STR, "custom_errors":custom_errors, }
+        return render(request, "circly/network.html", context)
 
+    for each_member in posted_members.keys():
+        # Create new members and add to the circle
+        if (posted_members[each_member]["contact_type"] == "email"):
+            next_member = Member(circle=new_circle,
+                                 circle_owner=False,
+                                 member_name=each_member,
+                                 member_email=posted_members[each_member]["contact_info"],
+                                 member_created_date=timezone.now(), )
+        elif (posted_members[each_member]["contact_type"] == "phone"):
+            next_member = Member(circle=new_circle,
+                                 circle_owner=False,
+                                 member_name=each_member,
+                                 member_phone=phonenumbers.format_number(posted_members[each_member]["contact_info"], 
+                                                                         phonenumbers.PhoneNumberFormat.E164),
+                                 member_created_date=timezone.now(), )
 
-            # Create reminders for all new members to join the circle
-            remind = Reminder(member=next_member,
-                              reminder_subject=" would like you to join their circle of support",
-                              reminder_message="Hey Mike, please tell Kennedy to do a breast self-exam! Go to the page at http://j.mp/SelfChec01 to get some ideas for what to talk about.",
-                              reminder_created_date=timezone.now(),
-                              reminder_send_date=timezone.now(), )
-            remind.save()
-    else:
-        return
+        next_member.save()
+
+        # Create invite code with short link for profile sign up
+        invite_code = "hashing"
+
+        invite_url = "http://www.circly.org/invite/" + invite_code
+        new_short_url = random_bitly(invite_url)
+
+        invite = Invitation(member=next_member,
+                            invite_code=invite_code, 
+                            invite_short_url=new_short_url, 
+                            invite_created_date=timezone.now(),
+                            invite_send_date=timezone.now())
+        invite.save()
+
+        # Create reminders for all new members to join the circle
+        remind = Reminder(member=next_member,
+                          reminder_subject=" would like you to join their circle of support",
+                          reminder_message="Hey " + each_member + ", visit " + new_short_url + " to fill in your profile and join a circle of preventive care.",
+                          reminder_created_date=timezone.now(),
+                          reminder_send_date=timezone.now(), )
+        remind.save()
 
     return HttpResponseRedirect(reverse("connect:dashboard", 
                                         kwargs={}))
@@ -280,7 +290,8 @@ def dashboard(request):
     new_circle = get_current_circle(request)
 
     # Get all members of the circle, display their join status
-    
+#    for each_member in new_circle.members:
+        # Will this magically work?
 
     context = {"member":new_member, "circle":new_circle, }
     return render(request, "circly/dashboard.html", context)
@@ -288,5 +299,4 @@ def dashboard(request):
 
 def checkmeout(request):
     context = {}
-
     return render(request, "circly/checkmeout.html", context)

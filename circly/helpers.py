@@ -3,6 +3,26 @@ from django.forms.models import model_to_dict
 from django.shortcuts import get_object_or_404
 from models import Circle, Member, Reminder
 
+import phonenumbers
+import bitly_api
+
+
+def random_bitly(old_url):
+    c = bitly_api.Connection(api_key=settings.BITLY_CLIENT_ID,
+                             secret=settings.BITLY_SECRET_KEY,
+                             access_token=settings.BITLY_ACCESS_TOKEN,
+                             login=settings.BITLY_LOGIN)
+
+    bitly_data_dict = c.shorten(old_url)
+
+    #{u'url': u'http://j.mp/1wADtNt', 
+    # u'hash': u'1wADtNt', 
+    # u'global_hash': u'2V6CFi', 
+    # u'long_url': u'http://www.google.com/', 
+    # u'new_hash': 1}
+
+    return bitly_data_dict["url"]
+
 
 def get_current_member(request):
     new_member_test = request.session.get("current_member", None)
@@ -34,8 +54,6 @@ def set_member_and_circle(request, new_circle, new_member):
 
 
 def is_phone(phone_str):
-    import phonenumbers
-
     try:
         z = phonenumbers.parse(phone_str, None)
     except NumberParseException:
@@ -52,3 +70,7 @@ def is_email(email_str):
     from django.core.validators import validate_email
 
     return True
+
+
+def get_member_id_from_invite(invite_code):
+    return ""

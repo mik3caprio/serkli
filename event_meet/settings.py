@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'x2k@kwp++xpord1+@^)xx4!!ajqfyp&(-ns%5*uen!frtv5)zh'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -88,6 +88,24 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER_VAR')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD_VAR')
 EMAIL_PORT = os.environ.get('EMAIL_PORT_VAR')
 EMAIL_USE_TLS = True
+
+BITLY_SECRET_KEY = os.environ.get('BITLY_SECRET_VAR')
+BITLY_CLIENT_ID = os.environ.get('BITLY_CLIENT_ID_VAR')
+BITLY_ACCESS_TOKEN = os.environ.get('BITLY_ACCESS_TOKEN_VAR')
+BITLY_LOGIN = os.environ.get('BITLY_LOGIN_VAR')
+
+CIRCLE_MAX_SIZE = 8
+CIRCLE_MIN_SIZE = 4
+
+circle_count = CIRCLE_MAX_SIZE
+range_str = ""
+
+while circle_count != 1:
+    range_str = range_str + str(circle_count)
+    circle_count = circle_count - 1
+
+# Reverse the string of numbers
+CONTACT_RANGE_STR = range_str[::-1]
 
 
 # Internationalization

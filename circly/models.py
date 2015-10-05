@@ -91,9 +91,11 @@ class Member(models.Model):
         return self.member_name
 
 
-class Invites(models.Model):
+class Invitation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     member = models.ForeignKey(Member)
+    invite_code = models.CharField(max_length=300, null=True, blank=True)
+    invite_short_url = models.URLField(null=True, blank=True)
     invite_created_date = models.DateTimeField('invite created on')
     invite_send_date = models.DateTimeField('send invite on', null=True, blank=True)
     invite_sent_on_date = models.DateTimeField('invite sent on', null=True, blank=True)
