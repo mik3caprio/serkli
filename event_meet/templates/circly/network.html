@@ -12,24 +12,24 @@
         <div class="title">
           <h3>Add your loved ones</h3>
 
-          <p>Choose the people whom you know will be the ones to support you, that you will support back in turn.</p>
+          <p>Choose at least three more people whom you know will support you, that you will take care of in turn.</p>
           <hr/>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
-        <p>{{ form.non_field_errors }}</p>
+
         <form class="form-horizontal" action="{% url 'connect:submitcircle' %}" method="post">
           {% csrf_token %}
 
-          {% for i in form.num_range_str %}
+          {% for i in num_range_str %}
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="name_{{ i }}" class="col-sm-4 control-label">Member #{{ i }}</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="name_{{ i }}" name="cm-name_{{ i }}" placeholder="Name">
+                  <input type="text" class="form-control" id="name_{{ i }}" name="name_{{ i }}" placeholder="Name">
                 </div>
               </div>
             </div>
@@ -37,7 +37,7 @@
               <div class="form-group">
                 <label for="contact_{{ i }}" class="col-sm-4 control-label">Contact</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="contact_{{ i }}" name="cm-contact_{{ i }}" placeholder="Email or Mobile Phone">
+                  <input type="text" class="form-control" id="contact_{{ i }}" name="contact_{{ i }}" placeholder="Email or Mobile Phone">
                 </div>
               </div>
             </div>

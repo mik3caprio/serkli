@@ -31,3 +31,24 @@ def set_member_and_circle(request, new_circle, new_member):
 
     request.session['current_circle'] = new_circle_dict
     request.session['current_member'] = new_member_dict
+
+
+def is_phone(phone_str):
+    import phonenumbers
+
+    try:
+        z = phonenumbers.parse(phone_str, None)
+    except NumberParseException:
+        return False
+
+    if phonenumbers.is_possible_number(z): 
+        if phonenumbers.is_valid_number(z):
+            return True
+
+    return False
+
+
+def is_email(email_str):
+    from django.core.validators import validate_email
+
+    return True

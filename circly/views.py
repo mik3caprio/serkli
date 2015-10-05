@@ -1,18 +1,22 @@
 import datetime
 from django import forms
-from django.shortcuts import get_object_or_404, render
 
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext, loader
 from django.utils import timezone
-from django.core.urlresolvers import reverse
 from django.views import generic
 
-from forms import *
 from choices_member import *
+from forms import *
 from helpers import set_member_and_circle, get_current_member, get_current_circle
+from helpers import is_phone, is_email
 
 from models import Circle, Member, Reminder
+
+CIRCLE_MAX_SIZE = 8
+CIRCLE_MIN_SIZE = 4
 
 
 def index(request):
@@ -181,16 +185,17 @@ def submitprofile(request):
 def network(request):
     new_member = get_current_member(request)
 
-    if request.method == "POST":
-        circle_form = NetworkForm(request.POST)
+    count = CIRCLE_MAX_SIZE
+    contact_range_str = ""
 
-        if circle_form.is_valid():
-            return HttpResponseRedirect(reverse("connect:submitcircle", 
-                                        kwargs={}))
-    else:
-        circle_form = NetworkForm(auto_id="f_%s")
+    while count != 1:
+        contact_range_str = contact_range_str + str(count)
+        count = count - 1
 
-    context = {"member":new_member, "form": circle_form, }
+    # Reverse the string of numbers
+    contact_range_str = contact_range_str[::-1]
+
+    context = {"member":new_member, "num_range_str":contact_range_str, }
     return render(request, "circly/network.html", context)
 
 
@@ -201,51 +206,70 @@ def submitcircle(request):
     count = 2
     posted_members = {}
 
-    while count <= CONTACT_RANGE:
+    while count <= CIRCLE_MAX_SIZE:
         member_contact = {}
 
-        current_name = request.POST.get("name_" + count, "")
-        current_contact = request.POST.get("contact_" + count, "")
+        current_name = request.POST.get("name_" + count, None)
+        current_contact = request.POST.get("contact_" + count, None)
 
-        if (current_name != ""):
-            if (current_contact != ""):
+        if (current_name):
+            if (current_contact):
                 # Check to see if current contact info is valid phone or email
                 if (is_phone(current_contact)):
                     member_contact["contact_type"] = "phone"
                 elif (is_email(current_contact)):
                     member_contact["contact_type"] = "email"
+                else:
+                    # Bad data kick out
+                    context = {"member":new_member, "num_range_str":contact_range_str, }
+                    return render(request, "circly/network.html", context)
 
                 member_contact["contact_info"] = current_contact
 
                 posted_members[current_name] = member_contact
+            else:
+                # Missing data kick out
+                context = {"member":new_member, "num_range_str":contact_range_str, }
+                return render(request, "circly/network.html", context)
+        else:
+            # Missing data kick out
+            context = {"member":new_member, "num_range_str":contact_range_str, }
+            return render(request, "circly/network.html", context)
 
-    for each_member in posted_members.keys():
-        # Create new members and add to the circle
-        if (posted_members[each_member]["contact_type"] == "email"):
-            next_member = Member(circle=new_circle,
-                                 circle_owner=False,
-                                 member_name=each_member,
-                                 member_email=posted_members[each_member]["contact_info"],
-                                 member_created_date=timezone.now(),)
-        elif (posted_members[each_member]["contact_type"] == "phone"):
-            next_member = Member(circle=new_circle,
-                                 circle_owner=False,
-                                 member_name=each_member,
-                                 member_phone=posted_members[each_member]["contact_info"],
-                                 member_created_date=timezone.now(),)
+    # Check to see if we have minimum more members added
+    if len(posted_members) >= (CIRCLE_MIN_SIZE - 1):
+        import phonenumbers
+        
+        for each_member in posted_members.keys():
+            # Create new members and add to the circle
+            if (posted_members[each_member]["contact_type"] == "email"):
+                next_member = Member(circle=new_circle,
+                                     circle_owner=False,
+                                     member_name=each_member,
+                                     member_email=posted_members[each_member]["contact_info"],
+                                     member_created_date=timezone.now(), )
+            elif (posted_members[each_member]["contact_type"] == "phone"):
+                next_member = Member(circle=new_circle,
+                                     circle_owner=False,
+                                     member_name=each_member,
+                                     member_phone=phonenumbers.format_number(posted_members[each_member]["contact_info"], 
+                                                                             phonenumbers.PhoneNumberFormat.E164),
+                                     member_created_date=timezone.now(), )
 
-        next_member.save()
+            next_member.save()
 
-        # Create invite code with link for profile sign up
+            # Create invite code with link for profile sign up
 
 
-        # Create reminders for all new members to join the circle
-        remind = Reminder(member=next_member,
-                          reminder_subject=" would like you to join their circle of support",
-                          reminder_message="Hey Mike, please tell Kennedy to do a breast self-exam! Go to the page at http://j.mp/SelfChec01 to get some ideas for what to talk about.",
-                          reminder_created_date=timezone.now(),
-                          reminder_send_date=timezone.now(), )
-        remind.save()
+            # Create reminders for all new members to join the circle
+            remind = Reminder(member=next_member,
+                              reminder_subject=" would like you to join their circle of support",
+                              reminder_message="Hey Mike, please tell Kennedy to do a breast self-exam! Go to the page at http://j.mp/SelfChec01 to get some ideas for what to talk about.",
+                              reminder_created_date=timezone.now(),
+                              reminder_send_date=timezone.now(), )
+            remind.save()
+    else:
+        return
 
     return HttpResponseRedirect(reverse("connect:dashboard", 
                                         kwargs={}))
