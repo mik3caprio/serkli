@@ -4,7 +4,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-
     url(r'^submitname/$', views.submitname, name='submitname'),
     url(r'^flow/$', views.flow, name='flow'),
     url(r'^invite/$', views.invite, name='invite'),
@@ -13,6 +12,7 @@ urlpatterns = [
     url(r'^network/$', views.network, name='network'),
     url(r'^submitcircle/$', views.submitcircle, name='submitcircle'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
+    url(r'^thankyou/$', views.thankyou, name='thankyou'),
     url(r'^checkmeout/$', views.checkmeout, name='checkmeout'),
 
 #    url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='detail'),

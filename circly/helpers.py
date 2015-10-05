@@ -1,9 +1,12 @@
 import datetime
+import hashlib
+import uuid
+
+from django.conf import settings
 from django.forms.models import model_to_dict
 from django.shortcuts import get_object_or_404
-from models import Circle, Member, Reminder
+from models import Circle, Member, Reminder, Invitation
 
-import phonenumbers
 import bitly_api
 
 
@@ -54,9 +57,11 @@ def set_member_and_circle(request, new_circle, new_member):
 
 
 def is_phone(phone_str):
+    import phonenumbers
+
     try:
         z = phonenumbers.parse(phone_str, None)
-    except NumberParseException:
+    except:
         return False
 
     if phonenumbers.is_possible_number(z): 
@@ -72,5 +77,18 @@ def is_email(email_str):
     return True
 
 
-def get_member_id_from_invite(invite_code):
+def hash_invite(member_email):
+    # uuid is used to generate a random number
+    salt = uuid.uuid4().hex
+
+    return hashlib.sha256(salt.encode() + member_email.encode()).hexdigest() + ':' + salt
+
+
+def check_invite(invite_code, member_contact_info):
+    check_member_contact_info, salt = invite_code.split(':')
+
+    return check_member_contact_info == hashlib.sha256(salt.encode() + member_contact_info.encode()).hexdigest()
+
+
+def get_member_id_from_invite(invite_code, member_contact_info):
     return ""

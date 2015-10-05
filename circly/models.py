@@ -29,6 +29,12 @@ class Circle(models.Model):
     circle_reminders_refreshed_on_date = models.DateTimeField('reminders refreshed on', null=True, blank=True)
 
 
+    def circle_owner_name(self):
+        circle_owner = self.member_set.filter(member__circle_owner=True)
+
+        return circle_owner.member_name
+
+
     def __unicode__(self):
         return self.circle_name
 
@@ -117,14 +123,14 @@ class Reminder(models.Model):
     member_reminded_on_date = models.DateTimeField('member reminded on', null=True, blank=True)
 
 
-    def is_an_email():
+    def is_an_email(self):
         if (self.member.member_email):
             return True
 
         return False
 
 
-    def is_an_SMS():
+    def is_an_SMS(self):
         if (self.member.member_phone):
             return True
 

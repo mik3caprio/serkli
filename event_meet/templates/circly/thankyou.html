@@ -7,14 +7,14 @@
 {% block contentdivfinish %}
 <section class="getstarted">
   <div class="container">
-  {{ circle }}
-  {% for each_member in circle_members %}
     <div class="row">
-      <div class="col-md-12">
-        <p><img src="{% static "circly/img/stock_person.svg" %}" /> {{ each_member.member_name }}</p>
+      <div class="col-md-6 col-md-offset-3">
+        <div class="title">
+          <h3>Welcome to {{ circle.circle_owner_name }}'s circle, {{ member.member_name }}</h3>
+          <hr/>
+        </div>
       </div>
     </div>
-  {% endfor %}
   </div>
 </section>
 {% endblock %}

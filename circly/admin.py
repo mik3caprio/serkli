@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Member, Circle, Reminder
+from .models import Member, Circle, Reminder, Invitation
 
 #class AttendeeAdmin(admin.ModelAdmin):
 #    fields = ['checked_in', 'attendee_name', 'attendee_email', 'attendee_id', 'event']
@@ -14,3 +14,4 @@ class CircleAdmin(admin.ModelAdmin):
 
 admin.site.register(Circle, CircleAdmin)
 admin.site.register(Reminder)
+admin.site.register(Invitation)

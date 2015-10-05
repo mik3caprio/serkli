@@ -1,22 +1,26 @@
 import datetime
 from django import forms
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext, loader
 from django.utils import timezone
+from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 from django.views import generic
 
 from choices_member import *
 from forms import *
 from helpers import set_member_and_circle, get_current_member, get_current_circle
-from helpers import get_member_id_from_invite
+from helpers import get_member_id_from_invite, hash_invite
 from helpers import is_phone, is_email
+from helpers import random_bitly
 
 import phonenumbers
 
-from models import Circle, Member, Reminder
+from models import Circle, Member, Reminder, Invitation
 
 
 def index(request):
@@ -89,6 +93,12 @@ def invite(request):
         # Check for valid invite code
         invite_code = ""
 
+#        if get_member_id_from_invite(invite_code, member_contact_info):
+#            print('You entered the right password')
+#        else:
+#            print('I am sorry but the password does not match')
+
+
         # Get member from invite code
         invite_member_id = get_member_id_from_invite(invite_code)
 
@@ -140,7 +150,7 @@ def submitinvite(request):
 
     new_member.save()
 
-    return HttpResponseRedirect(reverse("connect:dashboard", 
+    return HttpResponseRedirect(reverse("connect:thankyou", 
                                         kwargs={}))
 
 
@@ -201,42 +211,46 @@ def submitcircle(request):
 
     custom_errors = ""
 
-
     while count <= settings.CIRCLE_MAX_SIZE:
         member_contact = {}
 
         current_name = request.POST.get("name_" + str(count), None)
         current_contact = request.POST.get("contact_" + str(count), None)
 
-        if (current_name):
-            if (current_contact):
-                # Check to see if current contact info is valid phone or email
-                if (is_phone(current_contact)):
-                    member_contact["contact_type"] = "phone"
-                elif (is_email(current_contact)):
-                    member_contact["contact_type"] = "email"
+        if len(posted_members) < (settings.CIRCLE_MIN_SIZE - 1):
+            # Logic for minimum number of circle members
+            if (current_name):
+                if (current_contact):
+                    # Check to see if current contact info is valid phone or email
+                    if is_phone(current_contact):
+                        member_contact["contact_type"] = "phone"
+
+                    if is_email(current_contact):
+                        member_contact["contact_type"] = "email"
+
+                    if not is_phone(current_contact) and not is_email(current_contact):
+                        # Bad data error
+                        custom_errors += "<li>contact_" + str(count) + " must be either a valid phone number OR email</li>"
+
+                    member_contact["contact_info"] = current_contact
+
+                    posted_members[current_name] = member_contact
                 else:
-                    # Bad data error
-                    custom_errors += "<li>contact_" + str(count) + " must be either a valid phone number OR email</li>"
-
-                member_contact["contact_info"] = current_contact
-
-                posted_members[current_name] = member_contact
+                    # Missing contact data error
+                    custom_errors += "<li>name_" + str(count) + " is present but contact_" + str(count) + " is missing</li>"
             else:
-                # Missing contact data error
-                custom_errors += "<li>contact_" + str(count) + " is missing</li>"
-        else:
-            # Missing name data error
-            custom_errors += "<li>name_" + str(count) + " is missing</li>"
+                # Missing name data error
+                custom_errors += "<li>name_" + str(count) + " is missing</li>"
 
         count += 1
 
     # Check to see if we have minimum more members added
-    if len(posted_members) >= (settings.CIRCLE_MIN_SIZE - 1):
+    if len(posted_members) < (settings.CIRCLE_MIN_SIZE - 1):
         custom_errors += "<li>You need at least " + str(settings.CIRCLE_MIN_SIZE) + " members (including yourself) in your circle</li>"
 
     if custom_errors != "":
-        custom_errors = "<p><ul>" + custom_errors + "</ul></p>"
+        custom_errors = format_html("<p><ul>{}</ul></p>",
+                                    mark_safe(custom_errors))
 
         # If there are any errors, kick out and display them
         context = {"member":new_member, "num_range_str":settings.CONTACT_RANGE_STR, "custom_errors":custom_errors, }
@@ -261,7 +275,7 @@ def submitcircle(request):
         next_member.save()
 
         # Create invite code with short link for profile sign up
-        invite_code = "hashing"
+        invite_code = hash_invite(posted_members[each_member]["contact_info"])
 
         invite_url = "http://www.circly.org/invite/" + invite_code
         new_short_url = random_bitly(invite_url)
@@ -289,12 +303,16 @@ def dashboard(request):
     new_member = get_current_member(request)
     new_circle = get_current_circle(request)
 
-    # Get all members of the circle, display their join status
-#    for each_member in new_circle.members:
-        # Will this magically work?
-
-    context = {"member":new_member, "circle":new_circle, }
+    context = {"member":new_member, "circle":new_circle, "circle_members":new_circle.member_set.all(), }
     return render(request, "circly/dashboard.html", context)
+
+
+def thankyou(request):
+    new_member = get_current_member(request)
+    new_circle = get_current_circle(request)
+
+    context = {"member":new_member, "circle":new_circle, "circle_members":new_circle.member_set.all(), }
+    return render(request, "circly/thankyou.html", context)
 
 
 def checkmeout(request):
