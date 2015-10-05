@@ -1,103 +1,112 @@
 import datetime
+from django import forms
 from django.shortcuts import get_object_or_404, render
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext, loader
-from django_twilio.decorators import twilio_view
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.views import generic
-from django.forms.models import model_to_dict
 
-from twilio.twiml import Response
+from forms import *
+from choices_member import *
+from helpers import set_member_and_circle, get_current_member, get_current_circle
 
-
-CIRCLE_SIZE = 8
-
-
-class IndexView(generic.ListView):
-    template_name = 'circly/index.html'
-    context_object_name = ''
-
-    def get_queryset(self):
-        """Return the last five published questions."""
-        return #Question.objects.order_by('-pub_date')[:5]
+from models import Circle, Member, Reminder
 
 
-#def index(request):
-#    context = {}
-#
-#    return render(request, 'circly/index.html', context)
+def index(request):
+    if request.method == "POST":
+        person_form = NameForm(request.POST)
+
+        if person_form.is_valid():
+            return HttpResponseRedirect(reverse("connect:submitname", 
+                                        kwargs={}))
+    else:
+        person_form = NameForm(auto_id="f_%s")
+
+    context = {"form": person_form, }
+    return render(request, "circly/index.html", context)
 
 
 def submitname(request):
-    from .models import Circle, Member
-
-    first_name = request.POST.get('cm-name', "")
+    first_name = request.POST.get("name", "")
 
     if (first_name != ""):
         # Create a circle
         new_circle = Circle(circle_name=first_name + "'s circle",
-                            circle_created_date=timezone.now(),)
+                            circle_created_date=timezone.now(), )
         new_circle.save()
 
         # Create our new member
         new_member = Member(circle=new_circle,
                             circle_owner=True,
                             member_name=first_name,
-                            member_created_date=timezone.now(),)
+                            member_created_date=timezone.now(), )
         new_member.save()
 
+        set_member_and_circle(request, new_circle, new_member)
 
-        new_circle_dict = model_to_dict(new_circle)
-        new_member_dict = model_to_dict(new_member)
-
-        new_circle_dict['circle_created_date'] = new_circle_dict['circle_created_date'].isoformat()
-        new_member_dict['member_created_date'] = new_member_dict['member_created_date'].isoformat()
-
-        request.session['current_circle'] = new_circle_dict
-        request.session['current_member'] = new_member_dict
-
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('connect:flow', 
+        return HttpResponseRedirect(reverse("connect:flow", 
                                             kwargs={}))
     else:
         # Redisplay the name submission form
         return render(request, 
-                      'circly/index.html', 
-                      {'error_message': "You didn't enter a name.",})
+                      "circly/index.html", 
+                      {"error_message": "You didn't enter a name.", })
 
 
 def flow(request):
-    from .models import Circle, Member
+    new_member = get_current_member(request)
 
-    new_member_test = request.session.get('current_member', None)
+    if request.method == "POST":
+        profile_form = FlowForm(request.POST)
 
-    if new_member_test:
-        new_member = get_object_or_404(Member, pk=new_member_test['id'])
+        if profile_form.is_valid():
+            return HttpResponseRedirect(reverse("connect:submitprofile", 
+                                        kwargs={}))
+    else:
+        profile_form = FlowForm(auto_id="f_%s")
 
-    context = {'member':new_member}
-    return render(request, 'circly/flow.html', context)
+    context = {"member":new_member, "form": profile_form, }
+    return render(request, "circly/flow.html", context)
 
 
-def submitprofile(request):
-    from .models import Circle, Member
+def invite(request):
+    if request.method == "POST":
+        new_member = get_current_member(request)
 
-    new_member_test = request.session.get('current_member', None)
+        profile_form = FlowForm(request.POST)
 
-    if new_member_test:
-        new_member = get_object_or_404(Member, pk=new_member_test['id'])
+        if profile_form.is_valid():
+            return HttpResponseRedirect(reverse("connect:submitprofile", 
+                                        kwargs={}))
+    else:
+        # Get member from invite code
+        invite_member_id = get_member_id_from_invite()
 
-    chromosome = request.POST.get('cm-chromosome', "")
-    age = request.POST.get('cm-age', "")
-    ethnicity = request.POST.get('cm-ethnicity', "")
-    drink = request.POST.get('cm-drink', "")
-    smoke = request.POST.get('cm-smoke', "")
-    exercise = request.POST.get('cm-exercise', "")
-    bmi = request.POST.get('cm-bmi', "")
-    relatives = int(request.POST.get('cm-relatives', 0))
+        new_member = get_object_or_404(Member, pk=invite_member_id)
+        new_circle = get_object_or_404(Circle, pk=new_member.circle.id)
+
+        set_member_and_circle(request, new_circle, new_member)
+
+        profile_form = FlowForm(auto_id="f_%s")
+
+    context = {"member":new_member, "form": profile_form, }
+    return render(request, "circly/invite.html", context)
+
+
+def submitinvite(request):
+    new_member = get_current_member(request)
+
+    chromosome = request.POST.get("chromosome", "")
+    age = request.POST.get("age", "")
+    ethnicity = request.POST.get("ethnicity", "")
+    drink = request.POST.get("drink", "")
+    smoke = request.POST.get("smoke", "")
+    exercise = request.POST.get("exercise", "")
+    bmi = request.POST.get("bmi", "")
+    relatives = int(request.POST.get("relatives", 0))
 
     new_member.age_range = age
     new_member.sex_range = chromosome
@@ -124,40 +133,70 @@ def submitprofile(request):
 
     new_member.save()
 
-    return HttpResponseRedirect(reverse('connect:network', 
+    return HttpResponseRedirect(reverse("connect:dashboard", 
+                                        kwargs={}))
+
+
+def submitprofile(request):
+    new_member = get_current_member(request)
+
+    chromosome = request.POST.get("chromosome", "")
+    age = request.POST.get("age", "")
+    ethnicity = request.POST.get("ethnicity", "")
+    drink = request.POST.get("drink", "")
+    smoke = request.POST.get("smoke", "")
+    exercise = request.POST.get("exercise", "")
+    bmi = request.POST.get("bmi", "")
+    relatives = int(request.POST.get("relatives", 0))
+
+    new_member.age_range = age
+    new_member.sex_range = chromosome
+    new_member.ethnicity_range = ethnicity
+    new_member.bmi_range = bmi
+    new_member.cancer_family = relatives
+
+    if (drink == "yes"):
+        new_member.drinker = True
+    else:
+        new_member.drinker = False
+
+    if (smoke == "yes"):
+        new_member.smoker = True
+    else:
+        new_member.smoker = False
+
+    if (exercise == "yes"):
+        new_member.exercises = True
+    else:
+        new_member.exercises = False
+
+    new_member.member_profile_entered_date = timezone.now()
+
+    new_member.save()
+
+    return HttpResponseRedirect(reverse("connect:network", 
                                         kwargs={}))
 
 
 def network(request):
-    from .models import Circle, Member
+    new_member = get_current_member(request)
 
-    count = CIRCLE_SIZE
-    contact_range_str = ""
+    if request.method == "POST":
+        circle_form = NetworkForm(request.POST)
 
-    while count != 1:
-        contact_range_str = contact_range_str + str(count)
-        count = count - 1
+        if circle_form.is_valid():
+            return HttpResponseRedirect(reverse("connect:submitcircle", 
+                                        kwargs={}))
+    else:
+        circle_form = NetworkForm(auto_id="f_%s")
 
-    # Reverse the string of numbers
-    contact_range_str = contact_range_str[::-1]
-
-    context = {'num_range_str':contact_range_str}
-
-    return render(request, 'circly/network.html', context)
+    context = {"member":new_member, "form": circle_form, }
+    return render(request, "circly/network.html", context)
 
 
 def submitcircle(request):
-    from .models import Circle, Member, Reminder
-
-    new_member_test = request.session.get('current_member', None)
-
-    if new_member_test:
-        new_member = get_object_or_404(Member, pk=new_member_test['id'])
-
-    new_circle_test = request.session.get('current_circle', None)
-
-    if new_circle_test:
-        new_circle = get_object_or_404(Circle, pk=new_circle_test['id'])
+    new_member = get_current_member(request)
+    new_circle = get_current_circle(request)
 
     count = 2
     posted_members = {}
@@ -165,8 +204,8 @@ def submitcircle(request):
     while count <= CONTACT_RANGE:
         member_contact = {}
 
-        current_name = request.POST.get('cm-name_' + count, "")
-        current_contact = request.POST.get('cm-contact_' + count, "")
+        current_name = request.POST.get("name_" + count, "")
+        current_contact = request.POST.get("contact_" + count, "")
 
         if (current_name != ""):
             if (current_contact != ""):
@@ -197,6 +236,9 @@ def submitcircle(request):
 
         next_member.save()
 
+        # Create invite code with link for profile sign up
+
+
         # Create reminders for all new members to join the circle
         remind = Reminder(member=next_member,
                           reminder_subject=" would like you to join their circle of support",
@@ -205,34 +247,22 @@ def submitcircle(request):
                           reminder_send_date=timezone.now(), )
         remind.save()
 
-    # Always return an HttpResponseRedirect after successfully dealing
-    # with POST data. This prevents data from being posted twice if a
-    # user hits the Back button.
-    return HttpResponseRedirect(reverse('connect:dashboard', 
+    return HttpResponseRedirect(reverse("connect:dashboard", 
                                         kwargs={}))
 
 
 def dashboard(request):
-    from .models import Circle, Member
-
-    new_member_test = request.session.get('current_member', None)
-
-    if new_member_test:
-        new_member = get_object_or_404(Member, pk=new_member_test['id'])
-
-    new_circle_test = request.session.get('current_circle', None)
-
-    if new_circle_test:
-        new_circle = get_object_or_404(Circle, pk=new_circle_test['id'])
+    new_member = get_current_member(request)
+    new_circle = get_current_circle(request)
 
     # Get all members of the circle, display their join status
     
 
-    context = {'member':new_member}
-    return render(request, 'circly/dashboard.html', context)
+    context = {"member":new_member, "circle":new_circle, }
+    return render(request, "circly/dashboard.html", context)
 
 
 def checkmeout(request):
     context = {}
 
-    return render(request, 'circly/checkmeout.html', context)
+    return render(request, "circly/checkmeout.html", context)

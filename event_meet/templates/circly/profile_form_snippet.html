@@ -1,0 +1,5 @@
+          {% csrf_token %}
+
+          <p>I am a {{ form.chromosome }} who is {{ form.age }} years old and my <label for="{{ form.ethnicity.id_for_label }}">ethnicity</label> is {{ form.ethnicity }}. I {{ form.drink }} <label for="{{ form.bmi.id_for_label }}">drink</label>, {{ form.smoke }} <label for="{{ form.smoke.id_for_label }}">smoke</label>, and {{ form.exercise }} <label for="{{ form.exercise.id_for_label }}">exercise</label>. My <label for="{{ form.bmi.id_for_label }}">BMI</label> is {{ form.bmi }}. I have {{ form.relatives }} <label for="{{ form.relatives.id_for_label }}">immediate relatives</label> (mother, daughter, sibling) diagnosed with breast cancer.</p>
+
+          <input type="submit" class="btn btn-primary btn-lg" value="Next" />

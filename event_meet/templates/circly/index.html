@@ -10,12 +10,12 @@
     <div class="row">
       <div class="col-md-10 col-md-offset-1">
         <h1>Self care through the healing power of your circle.</h1>
-        <h2>1 in 8 women will develop breast cancer‎. Circly will help you, your friends, and your family lower your risk of breast cancer. Just tell us a little about yourself so we can help you understand what your risks are.</h2>
-        <!-- <button type="button" class="btn btn-default btn-lg ghost">Get Started</button> -->
+        <h2>1 in 8 women will develop breast cancer‎. Circly can help you, your friends, and your family lower your risk of breast cancer. Just tell us a little about yourself so we can help you understand what your risks are.</h2>
+
         <a href="#signup" class="btn btn-default btn-lg ghost">Get Started</a>
-      </div><!--/col-->
-    </div><!--/row-->
-  </div><!--/container-->
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="features">
@@ -29,7 +29,7 @@
         </li>
         <li class="col-md-4">
           <img src="{% static "circly/img/network.svg" %}" />
-          <h3>Use A Network</h3>
+          <h3>Use Your Network</h3>
           <p>You are extremely likely to know people who have been affected by breast cancer, either through their own diagnosis or the experience of a family member.</p>
         </li>
         <li class="col-md-4">
@@ -38,14 +38,14 @@
           <p>We have built a system that gives you a safe, simple, and secure way to connect and stay connected with your friends and family.</p>
         </li>
       </ul>
-    </div><!--/row-->
-  </div><!--/container-->
+    </div>
+  </div>
 </section>
 
 <section class="network">
   <div class="container">
     <h3>You are not alone.</h3>
-  </div><!--/container-->
+  </div>
 </section>
 
 <a name="signup"></a>
@@ -56,19 +56,20 @@
         <div class="title">
           <h3>Get Started</h3>
           <hr/>
-        </div><!--/title-->
-      </div><!--/col-->
-    </div><!--/row-->
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-md-10 col-md-offset-1">
+        <p>{{ form.non_field_errors }}</p>
+
         <form class="madlib" action="{% url 'connect:submitname' %}" method="post">
-        {% csrf_token %}
-        <p>My <label for="fName">name</label> is <input id="fName" name="cm-name" type="text" /> and I want to create a circle of support to prevent breast cancer.</p>
-        <!-- <button type="button" class="btn btn-primary btn-lg">Sign Up</button> -->
-        <input type="submit" class="btn btn-primary btn-lg" value="Sign Up" />
+          {% csrf_token %}
+          <p>My <label for="{{ form.name.id_for_label }}">name</label> is {{ form.name }} and I want to create a circle of support to prevent breast cancer.</p>
+          <input type="submit" class="btn btn-primary btn-lg" value="Sign Up" />
         </form>
-      </div><!--/col-->
-    </div><!--/row-->
-  </div><!--/container-->
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}

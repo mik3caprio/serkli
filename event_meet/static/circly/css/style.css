@@ -211,7 +211,6 @@ section{
   color: #2196F3;
   max-width: 300px;
   text-align: center;
-  width: 100%;
 }
 /* ========================================================= Dashboard ===*/
 #dashboard{
@@ -328,4 +327,7 @@ img{
 .btn-primary{
   background-color: #2196F3;
   border: none;
+}
+select#f_ethnicity {
+    width: 500px;
 }

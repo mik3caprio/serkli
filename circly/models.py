@@ -34,6 +34,8 @@ class Circle(models.Model):
 
 
 class Member(models.Model):
+    from choices_member import *
+
     circle = models.ForeignKey(Circle)
     circle_owner = models.BooleanField(default=False)
     member_name = models.CharField(max_length=100)
@@ -41,58 +43,18 @@ class Member(models.Model):
     member_email = models.CharField(max_length=200, null=True, blank=True)
     member_phone = models.CharField(max_length=25, null=True, blank=True)
 
-    UNDER_20 = 'u20'
-    BTWN_20_29 = '20-29'
-    BTWN_30_39 = '30-39'
-    BTWN_40_44 = '40-44'
-    BTWN_45_49 = '45-49'
-    BTWN_50_59 = '50-59'
-    OVER_60 = '60o'
-    AGE_RANGE_CHOICES = (
-        (UNDER_20, 'under 20'),
-        (BTWN_20_29, 'between 20 and 29'),
-        (BTWN_30_39, 'between 30 and 39'),
-        (BTWN_40_44, 'between 40 and 44'),
-        (BTWN_45_49, 'between 45 and 49'),
-        (BTWN_50_59, 'between 50 and 59'),
-        (OVER_60, '60 and over'),
-    )
     age_range = models.CharField(max_length=5,
                                  choices=AGE_RANGE_CHOICES,
                                  default=BTWN_20_29)
 
-    FEMALE = 'XX'
-    MALE = 'XY'
-    SEX_CHOICES = (
-        (FEMALE, 'XX sex chromosomes (female)'),
-        (MALE, 'XY sex chromosomes (male)'),
-    )
     sex_range = models.CharField(max_length=2,
                                  choices=SEX_CHOICES,
                                  default=FEMALE)
 
-    WHITE = 'CNH'
-    BLACK = 'AFR'
-    HISPANIC = 'HIS'
-    ASIAN = 'ASI'
-    OTHER = 'OTH'
-    ETHNICITY_CHOICES = (
-        (WHITE, 'Caucasian Non-Hispanic'),
-        (BLACK, 'African American'),
-        (HISPANIC, 'Hispanic'),
-        (ASIAN, 'Asian'),
-        (OTHER, 'Other race or ethnicity'),
-    )
     ethnicity_range = models.CharField(max_length=3,
                                        choices=ETHNICITY_CHOICES,
                                        default=WHITE)
 
-    BMI_UNDER = 'u25'
-    BMI_OVER = '25o'
-    BMI_CHOICES = (
-        (BMI_UNDER, 'is less than 25'),
-        (BMI_OVER, 'is 25 or greater'),
-    )
     bmi_range = models.CharField(max_length=3,
                                  choices=BMI_CHOICES,
                                  default=BMI_UNDER)
@@ -107,13 +69,13 @@ class Member(models.Model):
 
 
     def risk(self):
-        female_risk_percentage = {self.UNDER_20: 0.0000,
-                                  self.BTWN_20_29: 0.0006,
-                                  self.BTWN_30_39: 0.0044,
-                                  self.BTWN_40_44: 0.0145,
-                                  self.BTWN_45_49: 0.0145,
-                                  self.BTWN_50_59: 0.0233,
-                                  self.OVER_60: 0.0345,
+        female_risk_percentage = {UNDER_20: 0.0000,
+                                  BTWN_20_29: 0.0006,
+                                  BTWN_30_39: 0.0044,
+                                  BTWN_40_44: 0.0145,
+                                  BTWN_45_49: 0.0145,
+                                  BTWN_50_59: 0.0233,
+                                  OVER_60: 0.0345,
                                  }
 
         male_risk_percentage = 0.0010
@@ -127,6 +89,19 @@ class Member(models.Model):
 
     def __unicode__(self):
         return self.member_name
+
+
+class Invites(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    member = models.ForeignKey(Member)
+    invite_created_date = models.DateTimeField('invite created on')
+    invite_send_date = models.DateTimeField('send invite on', null=True, blank=True)
+    invite_sent_on_date = models.DateTimeField('invite sent on', null=True, blank=True)
+    member_joined_on_date = models.DateTimeField('member joined on', null=True, blank=True)
+
+
+    def __unicode__(self):
+        return unicode(self.id)
 
 
 class Reminder(models.Model):

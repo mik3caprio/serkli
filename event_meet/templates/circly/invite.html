@@ -2,7 +2,7 @@
 
 {% block title %}Sign Up | Circly{% endblock %}
 
-{% block contentdivstart %}<div id="flow">{% endblock %}
+{% block contentdivstart %}<div id="invite">{% endblock %}
 
 {% block contentdivfinish %}
 <section class="getstarted">
@@ -18,7 +18,7 @@
     <div class="row">
       <div class="col-md-12">
         <p>{{ form.non_field_errors }}</p>
-        <form class="madlib" action="{% url 'connect:submitprofile' %}" method="post">
+        <form class="madlib" action="{% url 'connect:submitinvite' %}" method="post">
 {% include "circly/profile_form_snippet.html" %}
         </form>
       </div>

@@ -3,10 +3,12 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^$', views.index, name='index'),
 
     url(r'^submitname/$', views.submitname, name='submitname'),
     url(r'^flow/$', views.flow, name='flow'),
+    url(r'^invite/$', views.invite, name='invite'),
+    url(r'^submitinvite/$', views.submitinvite, name='submitinvite'),
     url(r'^submitprofile/$', views.submitprofile, name='submitprofile'),
     url(r'^network/$', views.network, name='network'),
     url(r'^submitcircle/$', views.submitcircle, name='submitcircle'),
