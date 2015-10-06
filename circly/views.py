@@ -3,7 +3,7 @@ from django import forms
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext, loader
 from django.utils import timezone
@@ -14,7 +14,7 @@ from django.views import generic
 from choices_member import *
 from forms import *
 from helpers import set_member_and_circle, get_current_member, get_current_circle
-from helpers import get_member_id_from_invite, hash_invite
+from helpers import get_member_id_from_invite, check_invite, hash_invite
 from helpers import is_phone, is_email
 from helpers import random_bitly
 
@@ -80,7 +80,7 @@ def flow(request):
     return render(request, "circly/flow.html", context)
 
 
-def invite(request):
+def invite(request, invite_hash):
     if request.method == "POST":
         new_member = get_current_member(request)
 
@@ -90,24 +90,17 @@ def invite(request):
             return HttpResponseRedirect(reverse("connect:submitinvite", 
                                         kwargs={}))
     else:
-        # Check for valid invite code
-        invite_code = ""
+        invite_member_id = check_invite(invite_hash)
 
-#        if get_member_id_from_invite(invite_code, member_contact_info):
-#            print('You entered the right password')
-#        else:
-#            print('I am sorry but the password does not match')
+        if invite_member_id:
+            new_member = get_object_or_404(Member, pk=invite_member_id)
+            new_circle = get_object_or_404(Circle, pk=new_member.circle.id)
 
+            set_member_and_circle(request, new_circle, new_member)
 
-        # Get member from invite code
-        invite_member_id = get_member_id_from_invite(invite_code)
-
-        new_member = get_object_or_404(Member, pk=invite_member_id)
-        new_circle = get_object_or_404(Circle, pk=new_member.circle.id)
-
-        set_member_and_circle(request, new_circle, new_member)
-
-        profile_form = FlowForm(auto_id="f_%s")
+            profile_form = FlowForm(auto_id="f_%s")
+        else:
+            raise Http404
 
     context = {"member":new_member, "form": profile_form, }
     return render(request, "circly/invite.html", context)
@@ -303,7 +296,10 @@ def dashboard(request):
     new_member = get_current_member(request)
     new_circle = get_current_circle(request)
 
-    context = {"member":new_member, "circle":new_circle, "circle_members":new_circle.member_set.all(), }
+    context = {"member":new_member, 
+               "circle":new_circle, 
+               "circle_members":new_circle.member_set.all(), 
+               "circle_members_len":"n" + str(new_circle.member_set.count())}
     return render(request, "circly/dashboard.html", context)
 
 
@@ -311,7 +307,10 @@ def thankyou(request):
     new_member = get_current_member(request)
     new_circle = get_current_circle(request)
 
-    context = {"member":new_member, "circle":new_circle, "circle_members":new_circle.member_set.all(), }
+    context = {"member":new_member, 
+               "circle":new_circle, 
+               "circle_members":new_circle.member_set.all(), 
+               "circle_members_len":"n" + str(new_circle.member_set.count())}
     return render(request, "circly/thankyou.html", context)
 
 

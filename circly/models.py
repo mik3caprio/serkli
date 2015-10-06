@@ -30,9 +30,10 @@ class Circle(models.Model):
 
 
     def circle_owner_name(self):
-        circle_owner = self.member_set.filter(member__circle_owner=True)
+        circle_owner = self.member_set.filter(circle_owner=True)
+        name_str = circle_owner[0].member_name
 
-        return circle_owner.member_name
+        return name_str
 
 
     def __unicode__(self):

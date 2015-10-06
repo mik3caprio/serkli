@@ -5,7 +5,7 @@
 {% block contentdivstart %}<div id="dashboard">{% endblock %}
 
 {% block contentdivfinish %}
-<section class="getstarted">
+<section class="{{ circle_members_len }}">
   <div class="container">
   {{ circle }}
   {% for each_member in circle_members %}

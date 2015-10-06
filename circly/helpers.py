@@ -18,12 +18,6 @@ def random_bitly(old_url):
 
     bitly_data_dict = c.shorten(old_url)
 
-    #{u'url': u'http://j.mp/1wADtNt', 
-    # u'hash': u'1wADtNt', 
-    # u'global_hash': u'2V6CFi', 
-    # u'long_url': u'http://www.google.com/', 
-    # u'new_hash': 1}
-
     return bitly_data_dict["url"]
 
 
@@ -73,22 +67,40 @@ def is_phone(phone_str):
 
 def is_email(email_str):
     from django.core.validators import validate_email
+    from django.core.exceptions import ValidationError
 
-    return True
+    try:
+        validate_email("foo.bar@baz.qux")
+    except ValidationError as e:
+        return False
+    else:
+        return True
 
 
-def hash_invite(member_email):
+def hash_invite(member_email, existing_salt=None):
     # uuid is used to generate a random number
-    salt = uuid.uuid4().hex
+    if (existing_salt):
+        salt = existing_salt
+    else:
+        salt = uuid.uuid4().hex
 
     return hashlib.sha256(salt.encode() + member_email.encode()).hexdigest() + ':' + salt
 
 
-def check_invite(invite_code, member_contact_info):
+def check_invite(invite_code):
     check_member_contact_info, salt = invite_code.split(':')
 
-    return check_member_contact_info == hashlib.sha256(salt.encode() + member_contact_info.encode()).hexdigest()
+    # Get all open invites
+    open_invites = Invitation.objects.filter(member_joined_on_date=None)
 
+    for each_invite in open_invites:
+        if each_invite.member.member_email:
+            contact_info = each_invite.member.member_email
 
-def get_member_id_from_invite(invite_code, member_contact_info):
-    return ""
+        if each_invite.member.member_phone:
+            contact_info = each_invite.member.member_phone
+
+        if hash_invite(contact_info, salt) == invite_code:
+            return each_invite.member.id
+
+    return None
