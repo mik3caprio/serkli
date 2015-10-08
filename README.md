@@ -13,6 +13,6 @@ This assumes you have already gone through all the install procedures for Homebr
 
 ## Deploy to production
 
-* git push heroku master
-* heroku run --app circlyorg python manage.py makemigrations
-* heroku run --app circlyorg python manage.py migrate
+* `git push heroku master`
+* `heroku run --app circlyorg python manage.py makemigrations`
+* `heroku run --app circlyorg python manage.py migrate`
