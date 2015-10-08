@@ -15,3 +15,4 @@ class FlowForm(forms.Form):
     exercise = forms.ChoiceField(choices=EXERCISE_CHOICES, widget=forms.Select, required=True)
     bmi = forms.ChoiceField(choices=BMI_CHOICES, widget=forms.Select, required=True)
     relatives = forms.ChoiceField(choices=RELATIVE_CHOICES, widget=forms.Select, required=True)
+    invite = forms.BooleanField(widget=forms.HiddenInput(), required=False)

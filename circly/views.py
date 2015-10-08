@@ -14,7 +14,7 @@ from django.views import generic
 from choices_member import *
 from forms import *
 from helpers import set_member_and_circle, get_current_member, get_current_circle
-from helpers import get_member_id_from_invite, check_invite, hash_invite
+from helpers import check_invite, hash_invite
 from helpers import is_phone, is_email
 from helpers import random_bitly
 
@@ -68,13 +68,13 @@ def flow(request):
     new_member = get_current_member(request)
 
     if request.method == "POST":
-        profile_form = FlowForm(request.POST)
+        profile_form = FlowForm(request.POST, initial={"invite": False})
 
         if profile_form.is_valid():
             return HttpResponseRedirect(reverse("connect:submitprofile", 
                                         kwargs={}))
     else:
-        profile_form = FlowForm(auto_id="f_%s")
+        profile_form = FlowForm(auto_id="f_%s", initial={"invite": False})
 
     context = {"member":new_member, "form": profile_form, }
     return render(request, "circly/flow.html", context)
@@ -84,10 +84,10 @@ def invite(request, invite_hash):
     if request.method == "POST":
         new_member = get_current_member(request)
 
-        profile_form = FlowForm(request.POST)
+        profile_form = FlowForm(request.POST, initial={"invite": True})
 
         if profile_form.is_valid():
-            return HttpResponseRedirect(reverse("connect:submitinvite", 
+            return HttpResponseRedirect(reverse("connect:submitprofile", 
                                         kwargs={}))
     else:
         invite_member_id = check_invite(invite_hash)
@@ -98,56 +98,16 @@ def invite(request, invite_hash):
 
             set_member_and_circle(request, new_circle, new_member)
 
-            profile_form = FlowForm(auto_id="f_%s")
+            profile_form = FlowForm(auto_id="f_%s", initial={"invite": True})
         else:
             raise Http404
 
     context = {"member":new_member, "form": profile_form, }
-    return render(request, "circly/invite.html", context)
-
-
-def submitinvite(request):
-    new_member = get_current_member(request)
-
-    chromosome = request.POST.get("chromosome", "")
-    age = request.POST.get("age", "")
-    ethnicity = request.POST.get("ethnicity", "")
-    drink = request.POST.get("drink", "")
-    smoke = request.POST.get("smoke", "")
-    exercise = request.POST.get("exercise", "")
-    bmi = request.POST.get("bmi", "")
-    relatives = int(request.POST.get("relatives", 0))
-
-    new_member.age_range = age
-    new_member.sex_range = chromosome
-    new_member.ethnicity_range = ethnicity
-    new_member.bmi_range = bmi
-    new_member.cancer_family = relatives
-
-    if (drink == YES):
-        new_member.drinker = True
-    else:
-        new_member.drinker = False
-
-    if (smoke == YES):
-        new_member.smoker = True
-    else:
-        new_member.smoker = False
-
-    if (exercise == YES):
-        new_member.exercises = True
-    else:
-        new_member.exercises = False
-
-    new_member.member_profile_entered_date = timezone.now()
-
-    new_member.save()
-
-    return HttpResponseRedirect(reverse("connect:thankyou", 
-                                        kwargs={}))
+    return render(request, "circly/flow.html", context)
 
 
 def submitprofile(request):
+    invite = request.POST.get("invite", None)
     new_member = get_current_member(request)
 
     chromosome = request.POST.get("chromosome", "")
@@ -184,7 +144,12 @@ def submitprofile(request):
 
     new_member.save()
 
-    return HttpResponseRedirect(reverse("connect:network", 
+    if invite == "True":
+        submit_url = "connect:thankyou"
+    else:
+        submit_url = "connect:network"
+
+    return HttpResponseRedirect(reverse(submit_url,
                                         kwargs={}))
 
 

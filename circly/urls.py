@@ -8,7 +8,6 @@ urlpatterns = [
     url(r'^flow/$', views.flow, name='flow'),
     url(r'^invite/(?P<invite_hash>[0-9a-fA-F]+:[0-9a-fA-F]+)$', views.invite, name='invite'),
     url(r'^submitprofile/$', views.submitprofile, name='submitprofile'),
-    url(r'^submitinvite/$', views.submitinvite, name='submitinvite'),
     url(r'^network/$', views.network, name='network'),
     url(r'^submitcircle/$', views.submitcircle, name='submitcircle'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
