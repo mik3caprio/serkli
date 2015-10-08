@@ -175,28 +175,27 @@ def submitcircle(request):
         current_name = request.POST.get("name_" + str(count), None)
         current_contact = request.POST.get("contact_" + str(count), None)
 
-        if len(posted_members) < (settings.CIRCLE_MIN_SIZE - 1):
-            # Logic for minimum number of circle members
-            if (current_name):
-                if (current_contact):
-                    # Check to see if current contact info is valid phone or email
-                    if is_phone(current_contact):
-                        member_contact["contact_type"] = "phone"
+        if (current_name):
+            if (current_contact):
+                # Check to see if current contact info is valid phone or email
+                if is_phone(current_contact):
+                    member_contact["contact_type"] = "phone"
 
-                    if is_email(current_contact):
-                        member_contact["contact_type"] = "email"
+                if is_email(current_contact):
+                    member_contact["contact_type"] = "email"
 
-                    if not is_phone(current_contact) and not is_email(current_contact):
-                        # Bad data error
-                        custom_errors += "<li>contact_" + str(count) + " must be either a valid phone number OR email</li>"
+                if not is_phone(current_contact) and not is_email(current_contact):
+                    # Bad data error
+                    custom_errors += "<li>contact_" + str(count) + " must be either a valid phone number OR email</li>"
 
-                    member_contact["contact_info"] = current_contact
+                member_contact["contact_info"] = current_contact
 
-                    posted_members[current_name] = member_contact
-                else:
-                    # Missing contact data error
-                    custom_errors += "<li>name_" + str(count) + " is present but contact_" + str(count) + " is missing</li>"
+                posted_members[current_name] = member_contact
             else:
+                # Missing contact data error
+                custom_errors += "<li>name_" + str(count) + " is present but contact_" + str(count) + " is missing</li>"
+        else:
+            if len(posted_members) < (settings.CIRCLE_MIN_SIZE - 1):
                 # Missing name data error
                 custom_errors += "<li>name_" + str(count) + " is missing</li>"
 
