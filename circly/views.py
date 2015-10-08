@@ -246,7 +246,7 @@ def submitcircle(request):
 
         # Create reminders for all new members to join the circle
         remind = Reminder(member=next_member,
-                          reminder_subject=" would like you to join their circle of support",
+                          reminder_subject=new_circle.circle_owner_name() + " would like you to join their circle of support",
                           reminder_message="Hey " + each_member + ", visit " + new_short_url + " to fill in your profile and join a circle of preventive care.",
                           reminder_created_date=timezone.now(),
                           reminder_send_date=timezone.now(), )
@@ -260,9 +260,10 @@ def dashboard(request):
     new_member = get_current_member(request)
     new_circle = get_current_circle(request)
 
-    context = {"member":new_member, 
-               "circle":new_circle, 
-               "circle_members":new_circle.member_set.all(), 
+    context = {"member":new_member,
+               "circle":new_circle,
+               "circle_owner":new_circle.circle_owner_name(),
+               "circle_members":new_circle.member_set.all(),
                "circle_members_len":"n" + str(new_circle.member_set.count())}
     return render(request, "circly/dashboard.html", context)
 
@@ -271,9 +272,10 @@ def thankyou(request):
     new_member = get_current_member(request)
     new_circle = get_current_circle(request)
 
-    context = {"member":new_member, 
-               "circle":new_circle, 
-               "circle_members":new_circle.member_set.all(), 
+    context = {"member":new_member,
+               "circle":new_circle,
+               "circle_owner":new_circle.circle_owner_name(),
+               "circle_members":new_circle.member_set.all(),
                "circle_members_len":"n" + str(new_circle.member_set.count())}
     return render(request, "circly/thankyou.html", context)
 

@@ -7,11 +7,11 @@
 {% block contentdivfinish %}
 <section class="{{ circle_members_len }}">
   <div class="container">
-  {{ circle }}
-  {% for each_member in circle_members %}
+    <h4>{{ circle_owner }}'s Circle</h4>
+    {% for each_member in circle_members %}
     <div class="row">
       <div class="col-md-12">
-        <p><img src="{% static "circly/img/stock_person.svg" %}" /> {{ each_member.member_name }}</p>
+        <p><img src="{% static 'circly/img/stock_person.svg' %}" /> {{ each_member.member_name }}</p>
       </div>
     </div>
   {% endfor %}
