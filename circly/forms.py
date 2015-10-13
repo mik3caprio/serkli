@@ -4,6 +4,7 @@ from choices_member import *
 
 class NameForm(forms.Form):
     name = forms.CharField(max_length=100, required=True)
+    contact_info = forms.CharField(max_length=200, required=True)
 
 
 class FlowForm(forms.Form):

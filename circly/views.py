@@ -4,7 +4,7 @@ from django import forms
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.template import RequestContext, loader
 from django.utils import timezone
 from django.utils.safestring import mark_safe
@@ -13,8 +13,8 @@ from django.views import generic
 
 from choices_member import *
 from forms import *
-from helpers import set_member_and_circle, get_current_member, get_current_circle
-from helpers import check_invite, hash_invite
+from helpers import clear_member_and_circle, set_member_and_circle, get_current_member, get_current_circle
+from helpers import check_invite, check_owner, hash_code
 from helpers import is_phone, is_email
 from helpers import random_bitly
 
@@ -24,44 +24,74 @@ from models import Circle, Member, Reminder, Invitation
 
 
 def index(request):
-    if request.method == "POST":
-        person_form = NameForm(request.POST)
+    clear_member_and_circle(request)
 
-        if person_form.is_valid():
-            return HttpResponseRedirect(reverse("connect:submitname", 
-                                        kwargs={}))
-    else:
-        person_form = NameForm(auto_id="f_%s")
-
-    context = {"form": person_form, }
+    context = {}
     return render(request, "circly/index.html", context)
 
 
 def submitname(request):
-    first_name = request.POST.get("name", "")
+    first_name = request.POST.get("first_name", None)
+    contact_info = request.POST.get("contact_info", None)
 
-    if (first_name != ""):
-        # Create a circle
-        new_circle = Circle(circle_name=first_name + "'s circle",
-                            circle_created_date=timezone.now(), )
-        new_circle.save()
+    context = {}
+    custom_errors = ""
 
-        # Create our new member
-        new_member = Member(circle=new_circle,
-                            circle_owner=True,
-                            member_name=first_name,
-                            member_created_date=timezone.now(), )
-        new_member.save()
+    if (first_name):
+        context["first_name"] = first_name
 
-        set_member_and_circle(request, new_circle, new_member)
+        if (contact_info):
+            context["contact_info"] = contact_info
 
-        return HttpResponseRedirect(reverse("connect:flow", 
-                                            kwargs={}))
+            # Create a circle
+            new_circle = Circle(circle_name=first_name + "'s circle",
+                                circle_created_date=timezone.now(), )
+            new_circle.save()
+
+            # Create our new member
+            new_member = Member(circle=new_circle,
+                                circle_owner=True,
+                                member_name=first_name,
+                                member_created_date=timezone.now(), )
+
+            # Check to see if current contact info is valid phone or email
+            if is_phone(contact_info):
+                new_member.member_phone = contact_info
+
+            if is_email(contact_info):
+                new_member.member_email = contact_info
+
+            if not is_phone(contact_info) and not is_email(contact_info):
+                # Bad data error
+                custom_errors += "<li>contact info must be either a valid phone number OR email</li>"
+
+            new_member.save()
+
+            set_member_and_circle(request, new_circle, new_member)
+        else:
+            # Missing contact data error
+            custom_errors += "<li>name is present but contact info is missing</li>"
     else:
-        # Redisplay the name submission form
-        return render(request, 
-                      "circly/index.html", 
-                      {"error_message": "You didn't enter a name.", })
+        # Missing name data error
+        custom_errors += "<li>"
+
+        if (contact_info):
+            context["contact_info"] = contact_info
+            custom_errors += "contact info is present but "
+
+        custom_errors += "name is missing</li>"
+
+    if custom_errors != "":
+        custom_errors = format_html("<p><ul>{}</ul></p>",
+                                    mark_safe(custom_errors))
+
+        # If there are any errors, kick out and display them
+        context["custom_errors"] = custom_errors
+        context["anchor"] = "signup"
+        return render(request, "circly/index.html", context)
+
+    return HttpResponseRedirect(reverse("connect:flow", 
+                                        kwargs={}))
 
 
 def flow(request):
@@ -232,7 +262,7 @@ def submitcircle(request):
         next_member.save()
 
         # Create invite code with short link for profile sign up
-        invite_code = hash_invite(posted_members[each_member]["contact_info"])
+        invite_code = hash_code(posted_members[each_member]["contact_info"])
 
         invite_url = "http://www.circly.org/invite/" + invite_code
         new_short_url = random_bitly(invite_url)
@@ -252,13 +282,32 @@ def submitcircle(request):
                           reminder_send_date=timezone.now(), )
         remind.save()
 
+    if new_member.member_email:
+        owner_hash = hash_code(new_member.member_email)
+
+    if new_member.member_phone:
+        owner_hash = hash_code(new_member.member_phone)
+
+    dashboard_url = "http://www.circly.org/dashboard/" + owner_hash
+    new_short_dashboard_url = random_bitly(dashboard_url)
+
+    new_circle.circle_short_url = new_short_dashboard_url
+    new_circle.save()
+
+    set_member_and_circle(request, new_circle, new_member)
+
     return HttpResponseRedirect(reverse("connect:dashboard", 
-                                        kwargs={}))
+                                        kwargs={"owner_hash":owner_hash}))
 
 
-def dashboard(request):
-    new_member = get_current_member(request)
-    new_circle = get_current_circle(request)
+def dashboard(request, owner_hash):
+    owner_member_id = check_owner(owner_hash)
+
+    if owner_member_id:
+        new_member = get_object_or_404(Member, pk=owner_member_id)
+        new_circle = get_object_or_404(Circle, pk=new_member.circle.id)
+    else:
+        raise Http404
 
     context = {"member":new_member,
                "circle":new_circle,

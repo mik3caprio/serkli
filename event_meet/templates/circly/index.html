@@ -2,6 +2,8 @@
 {% load static from staticfiles %}
 {% block title %}Circly{% endblock %}
 
+{% block bodyattrs %} onload="goToOnLoadAnchor"{% endblock %}
+
 {% block contentdivstart %}<div id="home">{% endblock %}
 
 {% block contentdivfinish %}
@@ -61,15 +63,24 @@
     </div>
     <div class="row">
       <div class="col-md-10 col-md-offset-1">
-        <p>{{ form.non_field_errors }}</p>
+        {{ custom_errors }}
 
         <form class="madlib" action="{% url 'connect:submitname' %}" method="post">
           {% csrf_token %}
-          <p>My <label for="{{ form.name.id_for_label }}">name</label> is {{ form.name }} and I want to create a circle of support to prevent breast cancer.</p>
+          <p>My <label for="first_name">name</label> is <input type="text" id="first_name" name="first_name" value="{{ first_name }}">, my <label for="contact_info">contact info</label> is <input type="text" id="contact_info" name="contact_info" placeholder="Email or Cell" value="{{ contact_info }}">, and I want to create a circle of support to prevent breast cancer.</p>
           <input type="submit" class="btn btn-primary btn-lg" value="Sign Up" />
         </form>
       </div>
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block bodyscripts %}
+<script>
+  function goToOnLoadAnchor()
+  {
+      window.location.hash('{{ anchor }}');
+  }
+</script>
 {% endblock %}

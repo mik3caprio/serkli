@@ -27,7 +27,7 @@ class Circle(models.Model):
     circle_name = models.CharField(max_length=100)
     circle_created_date = models.DateTimeField('circle created on')
     circle_reminders_refreshed_on_date = models.DateTimeField('reminders refreshed on', null=True, blank=True)
-
+    circle_short_url = models.URLField(null=True, blank=True)
 
     def circle_owner_name(self):
         circle_owner = self.member_set.filter(circle_owner=True)

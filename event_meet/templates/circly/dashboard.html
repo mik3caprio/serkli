@@ -7,7 +7,7 @@
 {% block contentdivfinish %}
 <section class="{{ circle_members_len }}">
   <div class="container">
-    <h4>{{ circle_owner }}'s Circle</h4>
+    <h4>{{ circle_owner }}'s Circle (permanent link: <a href="{{ circle.circle_short_url }}">{{ circle.circle_short_url }}</a>)</h4>
     {% for each_member in circle_members %}
     <div class="row">
       <div class="col-md-12">
