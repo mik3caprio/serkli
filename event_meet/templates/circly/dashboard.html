@@ -7,14 +7,26 @@
 {% block contentdivfinish %}
 <section class="{{ circle_members_len }}">
   <div class="container">
-    <h4>{{ circle_owner }}'s Circle (permanent link: <a href="{{ circle.circle_short_url }}">{{ circle.circle_short_url }}</a>)</h4>
-    {% for each_member in circle_members %}
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="title">
+          <h3>{{ circle_owner }}'s Circle</h3>
+          <hr/>
+          <p>You can bookmark your circle's link: <a href="{{ circle.circle_short_url }}">{{ circle.circle_short_url }}</a></p>
+        </div><!--/title-->
+      </div><!--/col-->
+    </div><!--/row-->
+
     <div class="row">
       <div class="col-md-12">
-        <p><img src="{% static 'circly/img/stock_person.svg' %}" /> {{ each_member.member_name }}</p>
-      </div>
-    </div>
-  {% endfor %}
-  </div>
+        <ul class="yourmembers">
+        {% for each_member in circle_members %}
+          <li><img src="{% static 'circly/img/stock_person.svg' %}" /> <span>{{ each_member.member_name }}</span></li>
+        {% endfor %}
+        </ul>
+      </div><!--/col-->
+    </div><!--/row-->
+
+</div><!--/container-->
 </section>
 {% endblock %}

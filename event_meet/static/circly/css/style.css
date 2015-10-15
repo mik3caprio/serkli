@@ -216,9 +216,29 @@ section{
 #dashboard{
 
 }
-#dashboard img{
+#dashboard .n4 li{
+  width: 24%;
+}
+.yourmembers{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.yourmembers li{
+  display: inline-block;
+  margin: 0;
+  padding: 0 2px;
+}
+.yourmembers li img{
+  background-color: #2196F3;
+  border-radius: 100px;
   display: block;
   margin: 0 auto;
+  padding: 16px;
+}
+.yourmembers li span{
+  display: block;
+  text-align: center;
 }
 /* ========================================================= #checkmeout ===*/
 #checkmeout{
