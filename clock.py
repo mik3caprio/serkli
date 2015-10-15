@@ -74,7 +74,7 @@ def scheduled_job():
 
     for each_reminder in reminders:
         member_cur = conn.cursor()
-        member_cur.execute("""select * from circly_member where id = %s""" % each_reminder[6])
+        member_cur.execute("""select * from circly_member where id = %s""" % each_reminder[5])
 
         members = member_cur.fetchall()
 
