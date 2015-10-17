@@ -56,7 +56,10 @@ def submitname(request):
 
             # Check to see if current contact info is valid phone or email
             if is_phone(contact_info):
-                new_member.member_phone = contact_info
+                new_phone = phonenumbers.parse(contact_info, "US")
+                new_phone = phonenumbers.format_number(new_phone, phonenumbers.PhoneNumberFormat.E164)
+
+                new_member.member_phone = new_phone
 
             if is_email(contact_info):
                 new_member.member_email = contact_info
@@ -252,11 +255,13 @@ def submitcircle(request):
                                  member_email=posted_members[each_member]["contact_info"],
                                  member_created_date=timezone.now(), )
         elif (posted_members[each_member]["contact_type"] == "phone"):
+            new_phone = phonenumbers.parse(posted_members[each_member]["contact_info"], "US")
+            new_phone = phonenumbers.format_number(new_phone, phonenumbers.PhoneNumberFormat.E164)
+
             next_member = Member(circle=new_circle,
                                  circle_owner=False,
                                  member_name=each_member,
-                                 member_phone=phonenumbers.format_number(posted_members[each_member]["contact_info"], 
-                                                                         phonenumbers.PhoneNumberFormat.E164),
+                                 member_phone=new_phone,
                                  member_created_date=timezone.now(), )
 
         next_member.save()
