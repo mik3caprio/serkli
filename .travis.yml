@@ -13,11 +13,3 @@ before_script:
  - psql -U postgres -c "ALTER USER test CREATEDB;"
 
 script: python manage.py test
-
-deploy:
-  provider: heroku
-  api_key:
-    secure: q2YwFK/3GKioV7SnR47xf7S+rs2azTAqaSZLpB8R/uEnMsXwYplrl0wQ8e7/bTTOkHajbMch50cmMrE/h/g7DfoK/EPNZzpqQFbheXMHZc1NOBWV2ohwZNiFWZAdxa93WgT8EFOSMaUsm0eWsQW+nvbj+HsnzrJF7tqVT3SO535jN2/Vb4nUSpHpoA/JxwdtIQPPvlBgUqesuvnBka7ZTIwUBNmi+mOk+7iych2IAGW9vNCEhJYUoBKIzUMGGqk+vELjHFZ/Fyz7JMO+0B/p3ZMmeVlSxLL+Lzku8582z8YGzgf+7OS2el/s7TO2L2mtgt2Oc3Pl1xI76NanMA6igkusrkGxBiE+/aL9zaCtGrUyg7UNLwtSAio/etj4lEXW39G/AQhf6pmFMDikc25USi20TpFr6XaULG/oLDLitkHnrAuhHdrkh+VYGaTWYRKUM5otVMNowFomZNlHo75iapuAqpLvXVwtjH8St46//17S6GLT3FSfCX8q3kU+B9veUHxJrl94dW/TOHVo7gHA8BKqRSpjnkXKqM85No46w/2phW0AdokeAiTIJLiUn9ht9pM+hJrq7WcWpy9WRioOhAn9ISJFaEUM+PmTrfY+EpUOORM1JgJatzYRgoX4PS/jyXxDOCQ55Rep4mi+lqP9oGMALHz+/NEcWB8GEPwny5A=
-  app: circlyorg
-
-after_deploy: python manage.py migrate

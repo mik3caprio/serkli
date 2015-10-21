@@ -43,7 +43,12 @@ class Circle(Model):
 
 
 class Member(Model):
-    from choices_member import *
+    from choices_member import UNDER_20, BTWN_20_29, BTWN_30_39, BTWN_40_44, BTWN_45_49, BTWN_50_59, OVER_60
+    from choices_member import FEMALE, MALE
+    from choices_member import WHITE, BLACK, HISPANIC, ASIAN, OTHER
+    from choices_member import YES, NO
+    from choices_member import BMI_UNDER, BMI_OVER
+    from choices_member import AGE_RANGE_CHOICES, SEX_CHOICES, ETHNICITY_CHOICES, DRINK_CHOICES, SMOKE_CHOICES, EXERCISE_CHOICES, BMI_CHOICES, RELATIVE_CHOICES
 
     circle = ForeignKey(Circle)
     circle_owner = BooleanField(default=False)
