@@ -12,9 +12,6 @@ before_script:
 
  - psql -U postgres -c "CREATE USER test WITH CREATEUSER PASSWORD 'test';"
  - psql -U postgres -c "ALTER USER test CREATEDB;"
- - psql -U postgres -c "CREATE DATABASE event_meet_db;"
- - psql -U postgres -c "CREATE EXTENSION postgis" -d event_meet_db
- - psql -U postgres -c "CREATE EXTENSION postgis_topology" -d event_meet_db
  - psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE event_meet_db to test;"
  - python manage.py migrate
 
