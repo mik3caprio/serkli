@@ -1,5 +1,5 @@
 import uuid
-from django.db import models
+from django.db import models.Model, models.CharField, models.DateTimeField, models.ForeignKey, models.BooleanField, models.URLField, models.SmallIntegerField, models.UUIDField
 from django.utils import timezone
 
 

@@ -4,7 +4,7 @@ services:
 - postgresql
 
 env:
-  - DB_NAME=dbtest DB_USER=test DB_PASS=test
+  - DB_NAME=event_meet_db DB_USER=test DB_PASS=test
 
 install: pip install -r requirements.txt
 
@@ -16,6 +16,7 @@ before_script:
  - psql -U postgres -c "CREATE EXTENSION postgis" -d dbtest
  - psql -U postgres -c "CREATE EXTENSION postgis_topology" -d dbtest
  - psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE dbtest to test;"
+ - cd circly && python manage.py migrate
 
 script: python manage.py test
 
