@@ -73,7 +73,7 @@ class ModelTests(TestCase):
         create_member(b_circle, "Gertrude")
         create_member(b_circle, "Heidi")
 
-    def create_two_circles(self):
+    def test_create_two_circles(self):
         a_circle = Circle.objects.get(circle_name="Alice's circle")
         b_circle = Circle.objects.get(circle_name="Bob's circle")
 
