@@ -12,10 +12,7 @@ before_script:
  - psql -U postgres -c "CREATE USER test WITH CREATEUSER PASSWORD 'test';"
  - psql -U postgres -c "ALTER USER test CREATEDB;"
 
-script: 
- - python manage.py makemigrations
- - python manage.py migrate
- - python manage.py test
+script: python manage.py test
 
 deploy:
   provider: heroku
