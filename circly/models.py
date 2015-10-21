@@ -1,6 +1,7 @@
 import uuid
-from django.db import models.Model, models.CharField, models.DateTimeField, models.ForeignKey, models.BooleanField
-from django.db import models.URLField, models.SmallIntegerField, models.UUIDField
+from django.db.models import Model
+from django.db.models import CharField, DateTimeField, ForeignKey, BooleanField
+from django.db.models import URLField, SmallIntegerField, UUIDField
 from django.utils import timezone
 
 
