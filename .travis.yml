@@ -3,13 +3,13 @@ language: python
 services:
 - postgresql
 
-env:
-  - DB_NAME=event_meet_db DB_USER=test DB_PASS=test
-
 install: pip install -r requirements.txt
 
 before_script:
- - psql -U postgres -c "CREATE USER test WITH CREATEUSER PASSWORD 'test';"
- - psql -U postgres -c "ALTER USER test CREATEDB;"
 
-script: python manage.py test
+before_script:
+  - psql -c 'create database event_meet_db;' -U postgres
+  - python manage.py migrate --noinput
+
+script:
+  - python manage.py test
