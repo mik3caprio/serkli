@@ -9,13 +9,13 @@ env:
 install: pip install -r requirements.txt
 
 before_script:
-
  - psql -U postgres -c "CREATE USER test WITH CREATEUSER PASSWORD 'test';"
  - psql -U postgres -c "ALTER USER test CREATEDB;"
- - psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE event_meet_db to test;"
- - python manage.py migrate
 
-script: python manage.py test
+script: 
+ - python manage.py makemigrations
+ - python manage.py migrate
+ - python manage.py test
 
 deploy:
   provider: heroku
